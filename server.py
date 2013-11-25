@@ -1,6 +1,9 @@
 import os
 import json
 
+# thumbnails http://stackoverflow.com/questions/2612436/create-thumbnail-images-for-jpegs-with-python
+# http://rsbweb.nih.gov/ij/
+
 from bottle import Bottle, run, response, static_file
 
 app = Bottle()
