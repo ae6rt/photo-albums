@@ -5,11 +5,8 @@
 </head>
 <body ng-controller="AlbumController">
 <div>
-    <h1>{{message}}!</h1>
-</div>
-<div>
     Album
-    <select ng-model="album_selector" ng-options="i for i in albums"></select>
+    <select ng-model="album_selector" ng-change="album_changed(album_selector)" ng-options="i for i in albums"></select>
 </div>
 <div>
     <ul>
