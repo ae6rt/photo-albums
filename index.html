@@ -1,13 +1,22 @@
-<html ng-app>
+<html ng-app="albumApp">
 <head>
-    <script src="js/angular.min.js"></script>
+    <script src="lib/angular.min.js"></script>
+    <script src="js/controllers.js"></script>
 </head>
-<body>
+<body ng-controller="AlbumController">
 <div>
-    <label>Name:</label>
-    <input type="text" ng-model="yourName" placeholder="Enter a name here">
-    <hr>
-    <h1>Hello {{yourName}}!</h1>
+    <h1>{{message}}!</h1>
+</div>
+<div>
+    Album
+    <select ng-model="album_selector" ng-options="i for i in albums"></select>
+</div>
+<div>
+    <ul>
+        <li ng-repeat="i in album_list">
+            {{i}}
+        </li>
+    </ul>
 </div>
 </body>
 </html>
