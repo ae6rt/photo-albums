@@ -22,6 +22,5 @@ albumApp.controller('AlbumController', function ($scope, $http) {
     $scope.album_changed($scope.album_selector);
 
     $scope.image_popup = function (album_number, image_name) {
-        console.log(album_number, image_name)
     }
 });

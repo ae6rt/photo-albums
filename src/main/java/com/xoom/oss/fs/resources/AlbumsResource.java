@@ -119,6 +119,12 @@ public class AlbumsResource {
         };
     }
 
+    @POST
+    @Consumes("octet/stream")
+    public void addImage() {
+        throw new UnsupportedOperationException();
+    }
+
     private void createThumbnail(File albumDirectory, String imageFileName, String thumbnailImageFileName) {
         File imageFile = new File(albumDirectory, imageFileName);
         if (!imageFile.exists()) {
@@ -128,20 +134,12 @@ public class AlbumsResource {
         try {
             BufferedImage img = ImageIO.read(imageFile);
             BufferedImage thumbImg = Scalr.resize(img, Scalr.Method.QUALITY, Scalr.Mode.AUTOMATIC, 50, 50, Scalr.OP_ANTIALIAS);
-//            ByteArrayOutputStream os = new ByteArrayOutputStream();
-//            ImageIO.write(thumbImg, "jpg", os);
             File thumbNailImageFile = new File(albumDirectory, thumbnailImageFileName);
             ImageIO.write(thumbImg, "jpg", thumbNailImageFile);
         } catch (IOException e) {
             Response r = Response.status(404).entity(new ErrorMessage(String.format("Resource not found: %s", imageFile))).header("Content-type", "application/json").build();
             throw new WebApplicationException(e, r);
         }
-    }
-
-    @POST
-    @Consumes("octet/stream")
-    public void addImage() {
-        throw new UnsupportedOperationException();
     }
 
     private String fileReader(String path) {
