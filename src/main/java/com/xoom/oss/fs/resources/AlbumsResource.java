@@ -1,7 +1,9 @@
 package com.xoom.oss.fs.resources;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -23,15 +25,18 @@ import java.util.Arrays;
 import java.util.List;
 
 @Path("/")
-//@Consumes(MediaType.APPLICATION_JSON)
 public class AlbumsResource {
 
     private final File albumsDirectory = new File("albums");
 
     private final FilenameFilter fileFilter = new FilenameFilter() {
+        private boolean isImageFile(String path) {
+            return path.endsWith("JPG");
+        }
+
         @Override
         public boolean accept(File file, String s) {
-            return new File(file, s).isFile();
+            return new File(file, s).isFile() && isImageFile(s);
         }
     };
 
@@ -45,16 +50,15 @@ public class AlbumsResource {
     @GET
     @Produces(MediaType.TEXT_HTML)
     public String index() throws IOException {
-        System.out.println("index");
-        FileReader fileReader = new FileReader("index.html");
-        BufferedReader br = new BufferedReader(fileReader);
-        String s;
-        StringBuilder sb = new StringBuilder();
-        while ((s = br.readLine()) != null) {
-            sb.append(s);
-        }
-        fileReader.close();
-        return sb.toString();
+        return fileReader(new File("static/html", "index.html").getPath());
+    }
+
+    @GET
+    @Produces("application/javascript")
+    @Path("/{file: .*js$}")
+    public String javascripts(@PathParam("file") String path) {
+        File f = new File("static", path);
+        return fileReader(f.getPath());
     }
 
     @GET
@@ -105,6 +109,35 @@ public class AlbumsResource {
                 output.flush();
             }
         };
+    }
+
+    @POST
+    @Consumes("octet/stream")
+    public void addImage() {
+        throw new UnsupportedOperationException();
+    }
+
+    private String fileReader(String path) {
+        FileReader fileReader;
+        try {
+            fileReader = new FileReader(path);
+        } catch (FileNotFoundException e) {
+            Response r = Response.status(404).entity(new ErrorMessage(String.format("Resource not found: %s", path))).header("Content-type", "application/json").build();
+            throw new WebApplicationException(r);
+        }
+        BufferedReader br = new BufferedReader(fileReader);
+        String s;
+        StringBuilder sb = new StringBuilder();
+        try {
+            while ((s = br.readLine()) != null) {
+                sb.append(s);
+            }
+            fileReader.close();
+            return sb.toString();
+        } catch (IOException e) {
+            Response r = Response.status(500).entity(new ErrorMessage(String.format("Error reading resource: %s", path))).header("Content-type", "application/json").build();
+            throw new WebApplicationException(r);
+        }
     }
 
     public static class ErrorMessage {
