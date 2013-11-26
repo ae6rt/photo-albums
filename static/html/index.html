@@ -9,9 +9,9 @@
     <select ng-model="album_selector" ng-change="album_changed(album_selector)" ng-options="i for i in albums"></select>
 </div>
 <div>
-    <ul>
+    <ul style="list-style: none;">
         <li ng-repeat="i in album_list">
-            {{i}}
+            <img ng-src="/albums/{{album_selector}}/{{i}}"/>
         </li>
     </ul>
 </div>
