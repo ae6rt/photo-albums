@@ -9,6 +9,7 @@ run {
     if (System.getProperty("debugit") != null) {
         debug true
     }
+    maxHeapSize "1g"
 }
 
 ext.versions = [

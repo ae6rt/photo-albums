@@ -35,7 +35,7 @@ public class AlbumsResource {
 
     private final FilenameFilter fileFilter = new FilenameFilter() {
         private boolean isImageFile(String path) {
-            return path.endsWith("JPG");
+            return path.endsWith("JPG") && !path.contains("-thumbnail");
         }
 
         @Override
@@ -90,10 +90,10 @@ public class AlbumsResource {
         File albumDirectory = new File(albumsDirectory, albumNumber.toString());
         if (thumbnail) {
             String thumbnailImageFileName = String.format("%s-thumbnail.JPG", imageFileName.split(".JPG")[0]);
-            if (!new File(imageFileName).exists()) {
+            if (!new File(thumbnailImageFileName).exists()) {
                 createThumbnail(albumDirectory, imageFileName, thumbnailImageFileName);
-                imageFileName = thumbnailImageFileName;
             }
+            imageFileName = thumbnailImageFileName;
         }
 
         File imageFile = new File(albumDirectory, imageFileName);
