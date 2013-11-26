@@ -54,15 +54,28 @@ public class AlbumsResource {
     @GET
     @Produces(MediaType.TEXT_HTML)
     public String index() throws IOException {
-        return fileReader(new File("static/html", "index.html").getPath());
+        return plainTextFromFile(new File("static/html", "index.html"));
     }
 
     @GET
     @Produces("application/javascript")
     @Path("/{file: .*js$}")
     public String javascripts(@PathParam("file") String path) {
-        File f = new File("static", path);
-        return fileReader(f.getPath());
+        return plainTextFromFile(new File("static", path));
+    }
+
+    @GET
+    @Produces("text/css")
+    @Path("/{file: .*css$}")
+    public String css(@PathParam("file") String path) {
+        return plainTextFromFile(new File("static", path));
+    }
+
+    @GET
+    @Produces("image/png")
+    @Path("/{file: .*png$}")
+    public StreamingOutput png(@PathParam("file") String path) {
+        return new Stream(new File("static", path));
     }
 
     @GET
@@ -83,40 +96,24 @@ public class AlbumsResource {
     }
 
     @GET
-    @Path("/albums/{albumNumber: [0-9]+}/{imageFile}")
+    @Path("/albums/{albumNumber: [0-9]+}/{imageFile: .*JPG}")
     @Produces("image/jpeg")
     public StreamingOutput getImage(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName,
                                     @DefaultValue("false") @QueryParam("thumbnail") Boolean thumbnail) {
         File albumDirectory = new File(albumsDirectory, albumNumber.toString());
+        System.out.printf("@@@ albumDirectory: %s, thumbnail: %s\n", albumDirectory, thumbnail);
         if (thumbnail) {
             String thumbnailImageFileName = String.format("%s-thumbnail.JPG", imageFileName.split(".JPG")[0]);
+            System.out.printf("thumbnailImageFileName: %s\n", thumbnailImageFileName);
             if (!new File(thumbnailImageFileName).exists()) {
+                System.out.printf("creating thumbnail...\n");
                 createThumbnail(albumDirectory, imageFileName, thumbnailImageFileName);
             }
             imageFileName = thumbnailImageFileName;
         }
-
-        File imageFile = new File(albumDirectory, imageFileName);
-        final InputStream inputStream;
-        try {
-            inputStream = new FileInputStream(imageFile);
-        } catch (FileNotFoundException e) {
-            System.out.printf("file not found: %s\n", imageFile);
-            Response r = Response.status(404).entity(new ErrorMessage(String.format("Resource not found: %s", imageFile))).header("Content-type", "application/json").build();
-            throw new WebApplicationException(r);
-        }
-
-        return new StreamingOutput() {
-            @Override
-            public void write(OutputStream output) throws IOException, WebApplicationException {
-                final byte[] buffer = new byte[1024 * 16];
-                int len;
-                while ((len = inputStream.read(buffer)) != -1) {
-                    output.write(buffer, 0, len);
-                }
-                output.flush();
-            }
-        };
+        File file = new File(albumDirectory, imageFileName);
+        System.out.printf("@@@ image: %s\n", file);
+        return new Stream(file);
     }
 
     @POST
@@ -142,12 +139,12 @@ public class AlbumsResource {
         }
     }
 
-    private String fileReader(String path) {
+    private String plainTextFromFile(File file) {
         FileReader fileReader;
         try {
-            fileReader = new FileReader(path);
+            fileReader = new FileReader(file);
         } catch (FileNotFoundException e) {
-            Response r = Response.status(404).entity(new ErrorMessage(String.format("Resource not found: %s", path))).header("Content-type", "application/json").build();
+            Response r = Response.status(404).entity(new ErrorMessage(String.format("Resource not found: %s", file))).header("Content-type", "application/json").build();
             throw new WebApplicationException(r);
         }
         BufferedReader br = new BufferedReader(fileReader);
@@ -160,8 +157,39 @@ public class AlbumsResource {
             fileReader.close();
             return sb.toString();
         } catch (IOException e) {
-            Response r = Response.status(500).entity(new ErrorMessage(String.format("Error reading resource: %s", path))).header("Content-type", "application/json").build();
+            Response r = Response.status(500).entity(new ErrorMessage(String.format("Error reading resource: %s", file))).header("Content-type", "application/json").build();
             throw new WebApplicationException(r);
+        }
+    }
+
+    public static class Stream implements StreamingOutput {
+
+        private final File file;
+        private final InputStream inputStream;
+
+        public Stream(File file) {
+            this.file = file;
+            try {
+                inputStream = new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                Response r = Response.status(404).entity(new ErrorMessage(String.format("Resource not found: %s", file))).header("Content-type", "application/json").build();
+                throw new WebApplicationException(r);
+            }
+        }
+
+        @Override
+        public void write(OutputStream output) throws IOException, WebApplicationException {
+            try {
+                byte[] buffer = new byte[1024 * 8];
+                int len;
+                while ((len = inputStream.read(buffer)) != -1) {
+                    output.write(buffer, 0, len);
+                    output.flush();
+                }
+            } catch (IOException e) {
+                Response r = Response.status(500).entity(new ErrorMessage(String.format("Error reading resource: %s", file))).header("Content-type", "application/json").build();
+                throw new WebApplicationException(r);
+            }
         }
     }
 
