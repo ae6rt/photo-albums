@@ -1,5 +1,8 @@
 package com.xoom.oss.fs.resources;
 
+import org.imgscalr.Scalr;
+
+import javax.imageio.ImageIO;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -12,6 +15,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -85,8 +89,11 @@ public class AlbumsResource {
                                     @DefaultValue("false") @QueryParam("thumbnail") Boolean thumbnail) {
         File albumDirectory = new File(albumsDirectory, albumNumber.toString());
         if (thumbnail) {
-            String[] split = imageFileName.split(".JPG");
-            imageFileName = String.format("%s-thumbnail.JPG", split[0]);
+            String thumbnailImageFileName = String.format("%s-thumbnail.JPG", imageFileName.split(".JPG")[0]);
+            if (!new File(imageFileName).exists()) {
+                createThumbnail(albumDirectory, imageFileName, thumbnailImageFileName);
+                imageFileName = thumbnailImageFileName;
+            }
         }
 
         File imageFile = new File(albumDirectory, imageFileName);
@@ -94,6 +101,7 @@ public class AlbumsResource {
         try {
             inputStream = new FileInputStream(imageFile);
         } catch (FileNotFoundException e) {
+            System.out.printf("file not found: %s\n", imageFile);
             Response r = Response.status(404).entity(new ErrorMessage(String.format("Resource not found: %s", imageFile))).header("Content-type", "application/json").build();
             throw new WebApplicationException(r);
         }
@@ -109,6 +117,25 @@ public class AlbumsResource {
                 output.flush();
             }
         };
+    }
+
+    private void createThumbnail(File albumDirectory, String imageFileName, String thumbnailImageFileName) {
+        File imageFile = new File(albumDirectory, imageFileName);
+        if (!imageFile.exists()) {
+            Response r = Response.status(404).entity(new ErrorMessage(String.format("Resource not found: %s", imageFile))).header("Content-type", "application/json").build();
+            throw new WebApplicationException(r);
+        }
+        try {
+            BufferedImage img = ImageIO.read(imageFile);
+            BufferedImage thumbImg = Scalr.resize(img, Scalr.Method.QUALITY, Scalr.Mode.AUTOMATIC, 50, 50, Scalr.OP_ANTIALIAS);
+//            ByteArrayOutputStream os = new ByteArrayOutputStream();
+//            ImageIO.write(thumbImg, "jpg", os);
+            File thumbNailImageFile = new File(albumDirectory, thumbnailImageFileName);
+            ImageIO.write(thumbImg, "jpg", thumbNailImageFile);
+        } catch (IOException e) {
+            Response r = Response.status(404).entity(new ErrorMessage(String.format("Resource not found: %s", imageFile))).header("Content-type", "application/json").build();
+            throw new WebApplicationException(e, r);
+        }
     }
 
     @POST

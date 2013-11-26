@@ -47,6 +47,7 @@ dependencies {
     compile libraries.logging
     compile libraries.jersey_server
     compile "com.xoom.oss:feathercon:${versions.feathercon}"
+    compile 'org.imgscalr:imgscalr-lib:4.2'
 
     testCompile libraries.jersey_client
     testCompile libraries.test
