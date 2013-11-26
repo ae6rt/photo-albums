@@ -1,6 +1,5 @@
 package com.xoom.oss.fs.resources;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -11,9 +10,11 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,11 +22,12 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.List;
 
-@Path("/albums")
-@Consumes(MediaType.APPLICATION_JSON)
+@Path("/")
+//@Consumes(MediaType.APPLICATION_JSON)
 public class AlbumsResource {
 
     private final File albumsDirectory = new File("albums");
+
     private final FilenameFilter fileFilter = new FilenameFilter() {
         @Override
         public boolean accept(File file, String s) {
@@ -40,17 +42,32 @@ public class AlbumsResource {
         }
     };
 
-
-    @Produces(MediaType.APPLICATION_JSON)
     @GET
+    @Produces(MediaType.TEXT_HTML)
+    public String index() throws IOException {
+        System.out.println("index");
+        FileReader fileReader = new FileReader("index.html");
+        BufferedReader br = new BufferedReader(fileReader);
+        String s;
+        StringBuilder sb = new StringBuilder();
+        while ((s = br.readLine()) != null) {
+            sb.append(s);
+        }
+        fileReader.close();
+        return sb.toString();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/albums")
     public List<String> listAlbums() {
         String[] list = albumsDirectory.list(directoryFilter);
         return Arrays.asList(list);
     }
 
-    @Produces(MediaType.APPLICATION_JSON)
     @GET
-    @Path("{albumNumber: [0-9]+}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/albums/{albumNumber: [0-9]+}")
     public List<String> listAlbum(@PathParam("albumNumber") Integer albumNumber) {
         File albumDirectory = new File(albumsDirectory, albumNumber.toString());
         String[] list = albumDirectory.list(fileFilter);
@@ -58,7 +75,7 @@ public class AlbumsResource {
     }
 
     @GET
-    @Path("{albumNumber: [0-9]+}/{imageFile}")
+    @Path("/albums/{albumNumber: [0-9]+}/{imageFile}")
     @Produces("image/jpeg")
     public StreamingOutput getImage(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName,
                                     @DefaultValue("false") @QueryParam("thumbnail") Boolean thumbnail) {
