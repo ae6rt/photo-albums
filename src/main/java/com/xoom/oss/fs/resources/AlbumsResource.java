@@ -99,21 +99,21 @@ public class AlbumsResource {
     @Path("/albums/{albumNumber: [0-9]+}/{imageFile: .*JPG}")
     @Produces("image/jpeg")
     public StreamingOutput getImage(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName,
-                                    @DefaultValue("false") @QueryParam("thumbnail") Boolean thumbnail) {
+                                    @DefaultValue("false") @QueryParam("thumbnail") Boolean useThumbnail) {
         File albumDirectory = new File(albumsDirectory, albumNumber.toString());
-        System.out.printf("@@@ albumDirectory: %s, thumbnail: %s\n", albumDirectory, thumbnail);
-        if (thumbnail) {
+        File imageFile;
+        if (useThumbnail) {
             String thumbnailImageFileName = String.format("%s-thumbnail.JPG", imageFileName.split(".JPG")[0]);
-            System.out.printf("thumbnailImageFileName: %s\n", thumbnailImageFileName);
-            if (!new File(thumbnailImageFileName).exists()) {
-                System.out.printf("creating thumbnail...\n");
+            File thumbnailFile = new File(albumDirectory, thumbnailImageFileName);
+            if (!thumbnailFile.exists()) {
                 createThumbnail(albumDirectory, imageFileName, thumbnailImageFileName);
             }
-            imageFileName = thumbnailImageFileName;
+            imageFile = thumbnailFile;
+        } else {
+            imageFile = new File(albumDirectory, imageFileName);
         }
-        File file = new File(albumDirectory, imageFileName);
-        System.out.printf("@@@ image: %s\n", file);
-        return new Stream(file);
+        System.out.printf("@@@ image: %s (thumbnail=%s)\n", imageFile, useThumbnail);
+        return new Stream(imageFile);
     }
 
     @POST
