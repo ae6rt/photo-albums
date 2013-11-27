@@ -10,6 +10,7 @@ run {
         debug true
     }
     maxHeapSize "1g"
+    systemProperties = System.getProperties()
 }
 
 ext.versions = [
@@ -49,6 +50,7 @@ dependencies {
     compile libraries.jersey_server
     compile "com.xoom.oss:feathercon:${versions.feathercon}"
     compile 'org.imgscalr:imgscalr-lib:4.2'
+    compile 'javax.servlet:javax.servlet-api:3.0.1'
 
     testCompile libraries.jersey_client
     testCompile libraries.test
