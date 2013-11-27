@@ -58,6 +58,13 @@ public class AlbumsResource {
     }
 
     @GET
+    @Produces(MediaType.TEXT_HTML)
+    @Path("/partials/{file: .*html$}")
+    public String html(@PathParam("file") String path) {
+        return plainTextFromFile(new File("static/html/partials", path));
+    }
+
+    @GET
     @Produces("application/javascript")
     @Path("/{file: .*js$}")
     public String javascripts(@PathParam("file") String path) {
@@ -116,7 +123,7 @@ public class AlbumsResource {
     }
 
     @POST
-    @Consumes("octet/stream")
+    @Consumes(MediaType.APPLICATION_OCTET_STREAM)
     public void addImage() {
         throw new UnsupportedOperationException();
     }

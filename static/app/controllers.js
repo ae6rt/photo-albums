@@ -22,23 +22,31 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
 
     $scope.album_changed($scope.album_selector);
 
+    /*
+     templateUrl: 'myModalContent.html',
+     */
+
     $scope.open = function (album_number, image_name) {
-        $log.info("album_number, image_name: " + album_number + ", " + image_name);
         var modalInstance = $modal.open({
-            templateUrl: 'myModalContent.html',
+            templateUrl: 'partials/photodetail.html',
             controller: ModalInstanceCtrl,
             resolve: {
                 image_info: function () {
-                    var r = {album: album_number, image_name: image_name};
+                    var r = {
+                        album: album_number,
+                        image_name: image_name,
+                        image_info: {
+                            caption: "",
+                            exif: ""
+                        }
+                    };
                     return r;
                 }
             }
         });
 
         modalInstance.result.then(function () {
-            $log.info("modalInstance promise then");
         }, function () {
-            $log.info('Modal dismissed at: ' + new Date());
         });
     };
 
