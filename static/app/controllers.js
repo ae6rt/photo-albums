@@ -1,3 +1,4 @@
+//var albumApp = angular.module('albumApp', ['ui.bootstrap']);
 var albumApp = angular.module('albumApp', []);
 
 albumApp.controller('AlbumController', function ($scope, $http) {

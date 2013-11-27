@@ -33,8 +33,8 @@ public class AccessLoggingFilter implements Filter {
                     .append(" ")
                     .append(servletRequest.getRequestURI());
             System.out.printf("%s\n", sb.toString());
-            chain.doFilter(request, response);
         }
+        chain.doFilter(request, response);
     }
 
     @Override
