@@ -132,6 +132,14 @@ public class AlbumsResource {
         return new Stream(imageFile);
     }
 
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/metadata/{albumNumber: [0-9]+}/{imageFile: .*JPG}")
+    public String metadata(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName) {
+        File t = new File(new File(albumsDirectory, albumNumber.toString()), imageFileName.split(".JPG")[0] + ".meta");
+        return plainTextFromFile(t);
+    }
+
     @POST
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
     public void addImage() {
