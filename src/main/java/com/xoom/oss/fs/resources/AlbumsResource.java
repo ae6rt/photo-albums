@@ -124,8 +124,7 @@ public class AlbumsResource {
     private void createThumbnail(File albumDirectory, String imageFileName, String thumbnailImageFileName) {
         File imageFile = new File(albumDirectory, imageFileName);
         if (!imageFile.exists()) {
-            Response r = Response.status(404).entity(new ErrorMessage(String.format("Resource not found: %s", imageFile))).header("Content-type", "application/json").build();
-            throw new WebApplicationException(r);
+            throw new WebApplicationException(response(404, String.format("Resource not found: %s", imageFile)));
         }
         try {
             BufferedImage img = ImageIO.read(imageFile);
@@ -133,8 +132,7 @@ public class AlbumsResource {
             File thumbNailImageFile = new File(albumDirectory, thumbnailImageFileName);
             ImageIO.write(thumbImg, "jpg", thumbNailImageFile);
         } catch (IOException e) {
-            Response r = Response.status(404).entity(new ErrorMessage(String.format("Resource not found: %s", imageFile))).header("Content-type", "application/json").build();
-            throw new WebApplicationException(e, r);
+            throw new WebApplicationException(e, response(500, String.format("Error reading resource: %s", imageFile)));
         }
     }
 
@@ -143,8 +141,7 @@ public class AlbumsResource {
         try {
             fileReader = new FileReader(file);
         } catch (FileNotFoundException e) {
-            Response r = Response.status(404).entity(new ErrorMessage(String.format("Resource not found: %s", file))).header("Content-type", "application/json").build();
-            throw new WebApplicationException(r);
+            throw new WebApplicationException(response(404, String.format("Resource not found: %s", file)));
         }
         BufferedReader br = new BufferedReader(fileReader);
         String s;
@@ -156,9 +153,12 @@ public class AlbumsResource {
             fileReader.close();
             return sb.toString();
         } catch (IOException e) {
-            Response r = Response.status(500).entity(new ErrorMessage(String.format("Error reading resource: %s", file))).header("Content-type", "application/json").build();
-            throw new WebApplicationException(r);
+            throw new WebApplicationException(response(500, String.format("Error reading resource: %s", file)));
         }
+    }
+
+    private Response response(int code, String message) {
+        return Response.status(code).entity(new ErrorMessage(message)).header("Content-type", "application/json").build();
     }
 
     public static class Stream implements StreamingOutput {
