@@ -12,7 +12,7 @@
 </div>
 <div>
     <ul style="list-style: none;">
-        <li ng-repeat="i in album_list">
+        <li ng-repeat="i in image_names_by_album[album_selector]">
             <img ng-click="image_popup(album_selector,i)" ng-src="/albums/{{album_selector}}/{{i}}?thumbnail=true"/>
         </li>
     </ul>

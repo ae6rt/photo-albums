@@ -112,7 +112,6 @@ public class AlbumsResource {
         } else {
             imageFile = new File(albumDirectory, imageFileName);
         }
-        System.out.printf("@@@ image: %s (thumbnail=%s)\n", imageFile, useThumbnail);
         return new Stream(imageFile);
     }
 
