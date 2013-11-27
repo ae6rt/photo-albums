@@ -1,7 +1,6 @@
-//var albumApp = angular.module('albumApp', ['ui.bootstrap']);
-var albumApp = angular.module('albumApp', []);
+var albumApp = angular.module('albumApp', ['ui.bootstrap']);
 
-albumApp.controller('AlbumController', function ($scope, $http) {
+albumApp.controller('AlbumController', function ($scope, $http, $modal) {
     $scope.album_selector = 1;
     $scope.image_names_by_album = new Array();
 
