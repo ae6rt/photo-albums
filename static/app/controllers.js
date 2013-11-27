@@ -22,10 +22,6 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
 
     $scope.album_changed($scope.album_selector);
 
-    /*
-     templateUrl: 'myModalContent.html',
-     */
-
     $scope.open = function (album_number, image_name) {
         var modalInstance = $modal.open({
             templateUrl: 'partials/photodetail.html',
