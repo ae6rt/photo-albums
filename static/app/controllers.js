@@ -23,6 +23,19 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
     $scope.album_changed($scope.album_selector);
 
     $scope.open = function (album_number, image_name) {
+
+        $http.get("metadata/" + album_number + "/" + image_name)
+            .success(function (data, status, headers, config) {
+                $scope.photo_metadata = data;
+                $log.info(JSON.stringify($scope.photo_metadata));
+                $log.info(JSON.stringify($scope.photo_metadata.lat));
+                $log.info(JSON.stringify($scope.photo_metadata.lng));
+                $log.info(JSON.stringify($scope.photo_metadata.originalTime));
+            })
+            .error(function (data, status, headers, config) {
+                $log.info("Error getting metadata for " + image_name);
+            });
+
         var modalInstance = $modal.open({
             templateUrl: 'partials/photodetail.html',
             controller: ModalInstanceCtrl,
@@ -31,9 +44,11 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
                     var r = {
                         album: album_number,
                         image_name: image_name,
-                        image_info: {
-                            caption: "",
-                            exif: ""
+                        caption: "",
+                        exif: {
+                            lat: $scope.photo_metadata.lat,
+                            long: $scope.photo_metadata.lng,
+                            original_date: $scope.photo_metadata.originalTime
                         }
                     };
                     return r;

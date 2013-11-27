@@ -1,5 +1,9 @@
 <div class="modal-header">
-    <h3>{{image_info.album}}.{{image_info.image_name}}</h3>
+    <h3 ng-show="image_info.exif.lat.length != 0">lat: {{image_info.exif.lat}}</h3>
+
+    <h3 ng-show="image_info.exif.long.length != 0">long: {{image_info.exif.long}}</h3>
+
+    <h3 ng-show="image_info.exif.original_date.length != 0">Taken: {{image_info.exif.original_date}}</h3>
 </div>
 <div class="modal-body">
     <img ng-src="/albums/{{image_info.album}}/{{image_info.image_name}}"/>
