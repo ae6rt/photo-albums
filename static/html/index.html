@@ -13,9 +13,22 @@
 <div>
     <ul style="list-style: none;">
         <li ng-repeat="i in image_names_by_album[album_selector]">
-            <img ng-click="image_popup(album_selector,i)" ng-src="/albums/{{album_selector}}/{{i}}?thumbnail=true"/>
+            <img ng-click="open(album_selector,i)" ng-src="/albums/{{album_selector}}/{{i}}?thumbnail=true"/>
         </li>
     </ul>
+
+    <script type="text/ng-template" id="myModalContent.html">
+        <div class="modal-header">
+            <h3>/albums/{{image_info.album}}/{{image_info.image_name}}</h3>
+        </div>
+        <div class="modal-body">
+            <img ng-src="/albums/{{image_info.album}}/{{image_info.image_name}}"/>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
 </div>
 </body>
 </html>

@@ -8,7 +8,6 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Date;
 
 public class AccessLoggingFilter implements Filter {
     @Override
@@ -21,17 +20,17 @@ public class AccessLoggingFilter implements Filter {
         if (System.getProperty("access.logging") != null) {
             HttpServletRequest servletRequest = (HttpServletRequest) request;
             StringBuilder sb = new StringBuilder()
-                    .append(new Date().toString())
-                    .append(" ")
                     .append(servletRequest.getRemoteHost())
                     .append(" ")
                     .append(servletRequest.getProtocol())
                     .append(" ")
-                    .append(servletRequest.getHeader("user-agent"))
-                    .append(" ")
                     .append(servletRequest.getMethod())
                     .append(" ")
                     .append(servletRequest.getRequestURI());
+            String queryString = servletRequest.getQueryString();
+            if (queryString != null) {
+                sb.append("?").append(queryString);
+            }
             System.out.printf("%s\n", sb.toString());
         }
         chain.doFilter(request, response);
