@@ -1,10 +1,10 @@
 <div class="modal-header">
+    <!-- get city/state/country with http://maps.googleapis.com/maps/api/geocode/json?latlng=43.274333,11.986833&sensor=false -->
+    <span ng-show="image_info.exif.original_date.length != 0">{{image_info.exif.original_date}}</span>
     <a href="http://maps.google.com/maps?z=12&t=m&q=loc:{{image_info.exif.lat}}+{{image_info.exif.long}}"
        ng-show="image_info.exif.lat.length != 0">
-        {{image_info.exif.lat}}, {{image_info.exif.long}}
+        ({{image_info.exif.lat}}, {{image_info.exif.long}})
     </a>
-
-    <h3 ng-show="image_info.exif.original_date.length != 0">Taken: {{image_info.exif.original_date}}</h3>
 </div>
 <div class="modal-body">
     <img ng-src="/albums/{{image_info.album}}/{{image_info.image_name}}"/>

@@ -26,35 +26,36 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
 
         $http.get("metadata/" + album_number + "/" + image_name)
             .success(function (data, status, headers, config) {
-                $scope.photo_metadata = data;
+                $scope.openPhotoDetail(data);
             })
             .error(function (data, status, headers, config) {
                 $log.info("Error getting metadata for " + image_name);
             });
 
-        var modalInstance = $modal.open({
-            templateUrl: 'partials/photodetail.html',
-            controller: ModalInstanceCtrl,
-            resolve: {
-                image_info: function () {
-                    var r = {
-                        album: album_number,
-                        image_name: image_name,
-                        caption: "",
-                        exif: {
-                            lat: $scope.photo_metadata.lat,
-                            long: $scope.photo_metadata.lng,
-                            original_date: $scope.photo_metadata.originalTime
-                        }
-                    };
-                    return r;
+        $scope.openPhotoDetail = function (photo_metadata) {
+            var modalInstance = $modal.open({
+                templateUrl: 'partials/photodetail.html',
+                controller: ModalInstanceCtrl,
+                resolve: {
+                    image_info: function () {
+                        return {
+                            album: album_number,
+                            image_name: image_name,
+                            caption: "",
+                            exif: {
+                                lat: photo_metadata.lat,
+                                long: photo_metadata.lng,
+                                original_date: photo_metadata.originalTime
+                            }
+                        };
+                    }
                 }
-            }
-        });
+            });
 
-        modalInstance.result.then(function () {
-        }, function () {
-        });
+            modalInstance.result.then(function () {
+            }, function () {
+            });
+        };
     };
 
     var ModalInstanceCtrl = function ($scope, $modalInstance, image_info) {
