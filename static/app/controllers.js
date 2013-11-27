@@ -4,6 +4,13 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
     $scope.album_selector = 1;
     $scope.image_names_by_album = new Array();
 
+    $http.get("albums")
+        .success(function (data, status, headers, config) {
+            $scope.albums = data;
+        })
+        .error(function (data, status, headers, config) {
+        });
+
     $scope.album_changed = function (album_number) {
         $http.get("albums/" + album_number)
             .success(function (data, status, headers, config) {
@@ -13,13 +20,6 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
             });
     };
 
-    $http.get("albums")
-        .success(function (data, status, headers, config) {
-            $scope.albums = data;
-        })
-        .error(function (data, status, headers, config) {
-        });
-
     $scope.album_changed($scope.album_selector);
 
     $scope.open = function (album_number, image_name) {
@@ -27,10 +27,6 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
         $http.get("metadata/" + album_number + "/" + image_name)
             .success(function (data, status, headers, config) {
                 $scope.photo_metadata = data;
-                $log.info(JSON.stringify($scope.photo_metadata));
-                $log.info(JSON.stringify($scope.photo_metadata.lat));
-                $log.info(JSON.stringify($scope.photo_metadata.lng));
-                $log.info(JSON.stringify($scope.photo_metadata.originalTime));
             })
             .error(function (data, status, headers, config) {
                 $log.info("Error getting metadata for " + image_name);

@@ -1,7 +1,8 @@
 <div class="modal-header">
-    <h3 ng-show="image_info.exif.lat.length != 0">lat: {{image_info.exif.lat}}</h3>
-
-    <h3 ng-show="image_info.exif.long.length != 0">long: {{image_info.exif.long}}</h3>
+    <a href="http://maps.google.com/maps?z=12&t=m&q=loc:{{image_info.exif.lat}}+{{image_info.exif.long}}"
+       ng-show="image_info.exif.lat.length != 0">
+        {{image_info.exif.lat}}, {{image_info.exif.long}}
+    </a>
 
     <h3 ng-show="image_info.exif.original_date.length != 0">Taken: {{image_info.exif.original_date}}</h3>
 </div>
