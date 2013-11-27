@@ -27,6 +27,8 @@ public class AccessLoggingFilter implements Filter {
                     .append(" ")
                     .append(servletRequest.getProtocol())
                     .append(" ")
+                    .append(servletRequest.getHeader("user-agent"))
+                    .append(" ")
                     .append(servletRequest.getMethod())
                     .append(" ")
                     .append(servletRequest.getRequestURI());
