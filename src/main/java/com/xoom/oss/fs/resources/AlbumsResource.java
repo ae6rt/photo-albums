@@ -1,5 +1,13 @@
 package com.xoom.oss.fs.resources;
 
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.lang.GeoLocation;
+import com.drew.metadata.Directory;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.exif.ExifSubIFDDirectory;
+import com.drew.metadata.exif.GpsDirectory;
+import com.google.gson.Gson;
 import org.imgscalr.Scalr;
 
 import javax.imageio.ImageIO;
@@ -21,11 +29,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Path("/")
@@ -135,11 +145,73 @@ public class AlbumsResource {
         }
         try {
             BufferedImage img = ImageIO.read(imageFile);
-            BufferedImage thumbImg = Scalr.resize(img, Scalr.Method.QUALITY, Scalr.Mode.AUTOMATIC, 50, 50, Scalr.OP_ANTIALIAS);
+            BufferedImage thumbImg = Scalr.resize(img, Scalr.Method.QUALITY, Scalr.Mode.AUTOMATIC, 100, 100, Scalr.OP_ANTIALIAS);
             File thumbNailImageFile = new File(albumDirectory, thumbnailImageFileName);
             ImageIO.write(thumbImg, "jpg", thumbNailImageFile);
+            writeExif(imageFile);
         } catch (IOException e) {
             throw new WebApplicationException(e, response(500, String.format("Error reading resource: %s", imageFile)));
+        }
+    }
+
+    private void writeExif(File imageFile) {
+        File metadataFile = new File(imageFile.getParentFile(), imageFile.getName().split(".JPG")[0] + ".meta");
+        try {
+            PhotoMetadata photoMetadata = null;
+            Metadata metadata = ImageMetadataReader.readMetadata(imageFile);
+            Date date = null;
+            for (Directory directory : metadata.getDirectories()) {
+                if (directory instanceof ExifSubIFDDirectory) {
+                    date = directory.getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL);
+                }
+                if (directory instanceof GpsDirectory) {
+                    GpsDirectory gpsDirectory = (GpsDirectory) directory;
+                    GeoLocation geoLocation = gpsDirectory.getGeoLocation();
+                    double latitude = geoLocation.getLatitude();
+                    double longitude = geoLocation.getLongitude();
+                    photoMetadata = new PhotoMetadata(date.toString(), latitude, longitude);
+                }
+            }
+            if (photoMetadata == null) {
+                photoMetadata = new PhotoMetadata(date.toString());
+            }
+            FileWriter fileWriter = new FileWriter(metadataFile);
+            fileWriter.write(new Gson().toJson(photoMetadata));
+            fileWriter.close();
+        } catch (ImageProcessingException e) {
+            throw new WebApplicationException(response(404, String.format("Resource not found: %s", imageFile)));
+        } catch (IOException e) {
+            throw new WebApplicationException(e, response(500, String.format("Error reading resource: %s", imageFile)));
+        }
+    }
+
+    private class PhotoMetadata {
+        public String originalTime;
+        public String lat;
+        public String lng;
+
+        public PhotoMetadata() {
+        }
+
+        public PhotoMetadata(String originalTime, double lat, double lng) {
+            this.originalTime = originalTime;
+            this.lat = String.format("%f", lat);
+            this.lng = String.format("%f", lng);
+        }
+
+        public PhotoMetadata(String originalTime) {
+            this.originalTime = originalTime;
+            this.lat = "";
+            this.lng = "";
+        }
+
+        @Override
+        public String toString() {
+            return "PhotoMetadata{" +
+                    "originalTime='" + originalTime + '\'' +
+                    ", lat='" + lat + '\'' +
+                    ", lng='" + lng + '\'' +
+                    '}';
         }
     }
 
