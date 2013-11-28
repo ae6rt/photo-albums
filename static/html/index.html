@@ -8,7 +8,9 @@
 <body ng-controller="AlbumController">
 <div>
     Album
-    <select ng-model="album_selector" ng-change="album_changed(album_selector)" ng-options="i for i in albums"></select>
+    <select ng-model="album_selector" ng-change="album_changed(album_selector)" ng-options="i for i in albums">
+        <option value="">-- Select album --</option>
+    </select>
 </div>
 <div>
     <ul class="inline">
