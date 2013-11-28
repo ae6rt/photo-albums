@@ -1,4 +1,11 @@
+body {
+    margin:25px 10px;
+    background-color: #000000;
+}
+
 div.album {
     border-style: ridge;
     border-width: 1px;
+    /*border-color: #3F3F3F;*/
+    border-color: #2C2C2C;
 }
