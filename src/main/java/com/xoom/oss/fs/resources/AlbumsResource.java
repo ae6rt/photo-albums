@@ -118,14 +118,14 @@ public class AlbumsResource {
     }
 
     @GET
-    @Path("/albums/{albumNumber: [0-9]+}/{imageFile: .*[jJ][pP][gG]$}")
+    @Path("/albums/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][gG]$}")
     @Produces("image/jpeg")
     public StreamingOutput getImage(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName,
                                     @DefaultValue("false") @QueryParam("thumbnail") Boolean useThumbnail) {
         File albumDirectory = new File(albumsDirectory, albumNumber.toString());
         File imageFile;
         if (useThumbnail) {
-            String thumbnailImageFileName = String.format("%s-thumbnail.JPG", imageFileName.split(".JPG")[0]);
+            String thumbnailImageFileName = String.format("%s-thumbnail", imageFileName.split(".JPG")[0]);
             File thumbnailFile = new File(albumDirectory, thumbnailImageFileName);
             if (!thumbnailFile.exists()) {
                 createThumbnail(albumDirectory, imageFileName, thumbnailImageFileName);
@@ -139,7 +139,7 @@ public class AlbumsResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/metadata/{albumNumber: [0-9]+}/{imageFile: .*[jJ][pP][gG]$}")
+    @Path("/metadata/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][gG]$}")
     public String metadata(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName) {
         File t = new File(new File(albumsDirectory, albumNumber.toString()), imageFileName.split(".JPG")[0] + ".meta");
         return plainTextFromFile(t);
