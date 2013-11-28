@@ -1,12 +1,14 @@
 var albumApp = angular.module('albumApp', ['ui.bootstrap']);
 
 albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
-    $scope.album_selector = 1;
+
     $scope.image_names_by_album = new Array();
 
     $http.get("albums")
         .success(function (data, status, headers, config) {
             $scope.albums = data;
+            $scope.album_selector = data[0];
+            $scope.album_changed($scope.album_selector);
         })
         .error(function (data, status, headers, config) {
         });
@@ -19,8 +21,6 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
             .error(function (data, status, headers, config) {
             });
     };
-
-    $scope.album_changed($scope.album_selector);
 
     $scope.open = function (album_number, image_name) {
 
@@ -51,7 +51,6 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
                     }
                 }
             });
-
             modalInstance.result.then(function () {
             }, function () {
             });
