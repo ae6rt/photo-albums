@@ -12,6 +12,7 @@ import org.imgscalr.Scalr;
 import org.petrovic.photos.ErrorMessage;
 import org.petrovic.photos.PhotoMetadata;
 import org.petrovic.photos.Stream;
+import org.petrovic.photos.Strings;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.Consumes;
@@ -126,8 +127,8 @@ public class AlbumsResource {
         File albumDirectory = new File(albumsDirectory, albumNumber.toString());
         File imageFile;
         if (useThumbnail) {
-            String fileExtension = extension(imageFileName);
-            String thumbnailImageFileName = String.format("%s-thumbnail.%s", nameLessExtension(imageFileName), fileExtension);
+            String fileExtension = Strings.extension(imageFileName);
+            String thumbnailImageFileName = String.format("%s-thumbnail.%s", Strings.nameLessExtension(imageFileName), fileExtension);
             File thumbnailFile = new File(albumDirectory, thumbnailImageFileName);
             if (!thumbnailFile.exists()) {
                 createThumbnail(albumDirectory, imageFileName, thumbnailImageFileName);
@@ -139,15 +140,11 @@ public class AlbumsResource {
         return new Stream(imageFile);
     }
 
-    private String extension(String imageFileName) {
-        return imageFileName.substring(imageFileName.lastIndexOf(".") + 1);
-    }
-
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/metadata/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][gG]$}")
     public String metadata(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName) {
-        File t = new File(new File(albumsDirectory, albumNumber.toString()), nameLessExtension(imageFileName) + ".meta");
+        File t = new File(new File(albumsDirectory, albumNumber.toString()), Strings.nameLessExtension(imageFileName) + ".meta");
         return plainTextFromFile(t);
     }
 
@@ -173,12 +170,8 @@ public class AlbumsResource {
         }
     }
 
-    private String nameLessExtension(String s) {
-        return s.substring(0, s.lastIndexOf("."));
-    }
-
     private void writeExif(File imageFile) {
-        File metadataFile = new File(imageFile.getParentFile(), nameLessExtension(imageFile.getName()) + ".meta");
+        File metadataFile = new File(imageFile.getParentFile(), Strings.nameLessExtension(imageFile.getName()) + ".meta");
         try {
             PhotoMetadata photoMetadata = null;
             Metadata metadata = ImageMetadataReader.readMetadata(imageFile);
