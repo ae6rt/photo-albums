@@ -1,4 +1,4 @@
-package com.xoom.oss.fs.resources;
+package org.petrovic.photos;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;

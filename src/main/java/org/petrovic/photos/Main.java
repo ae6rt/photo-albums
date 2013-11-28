@@ -1,4 +1,4 @@
-package com.xoom.oss.fs;
+package org.petrovic.photos;
 
 import com.xoom.oss.feathercon.FeatherCon;
 import com.xoom.oss.feathercon.FilterWrapper;
@@ -8,7 +8,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         FilterWrapper.Builder filterBuilder = new FilterWrapper.Builder();
         filterBuilder.withFilterClass(AccessLoggingFilter.class).withPathSpec("/*");
-        FeatherCon server = new JerseyServerBuilder("com.xoom.oss.fs.resources", "/*")
+        FeatherCon server = new JerseyServerBuilder("org.petrovic.photos.resources", "/*")
                 .withPort(8080)
                 .withFilter(filterBuilder.build())
                 .build();

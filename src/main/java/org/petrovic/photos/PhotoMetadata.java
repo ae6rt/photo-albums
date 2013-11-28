@@ -1,4 +1,4 @@
-package com.xoom.oss.fs.resources;
+package org.petrovic.photos;
 
 public class PhotoMetadata {
     public String originalTime;

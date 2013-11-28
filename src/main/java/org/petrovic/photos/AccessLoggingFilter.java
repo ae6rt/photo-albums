@@ -1,4 +1,4 @@
-package com.xoom.oss.fs;
+package org.petrovic.photos;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

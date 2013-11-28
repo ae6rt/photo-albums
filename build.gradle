@@ -3,7 +3,7 @@ apply plugin: 'application'
 
 version = "0.1"
 
-mainClassName = "com.xoom.oss.fs.Main"
+mainClassName = "org.petrovic.photos.Main"
 
 run {
     if (System.getProperty("run.debug") != null) {

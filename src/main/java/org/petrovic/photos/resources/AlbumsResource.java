@@ -1,4 +1,4 @@
-package com.xoom.oss.fs.resources;
+package org.petrovic.photos.resources;
 
 import com.drew.imaging.ImageMetadataReader;
 import com.drew.imaging.ImageProcessingException;
@@ -8,6 +8,9 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.exif.GpsDirectory;
 import com.google.gson.Gson;
+import org.petrovic.photos.ErrorMessage;
+import org.petrovic.photos.PhotoMetadata;
+import org.petrovic.photos.Stream;
 import org.imgscalr.Scalr;
 
 import javax.imageio.ImageIO;
