@@ -6,15 +6,12 @@
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
 </head>
 <body ng-controller="AlbumController">
-<div>
-    Album
-    <select ng-model="album_selector" ng-change="album_changed(album_selector)" ng-options="i for i in albums">
-    </select>
-</div>
-<div>
+<div ng-repeat="a in albums">
+    <hr/>
+    Album {{a}}
     <ul class="inline">
-        <li ng-repeat="i in image_names_by_album[album_selector]">
-            <img ng-click="open(album_selector,i)" ng-src="/albums/{{album_selector}}/{{i}}?thumbnail=true"/>
+        <li ng-repeat="i in image_names_by_album[a]">
+            <img ng-click="open(a,i)" ng-src="/albums/{{a}}/{{i}}?thumbnail=true"/>
         </li>
     </ul>
 </div>

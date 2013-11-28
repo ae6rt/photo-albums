@@ -7,8 +7,9 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
     $http.get("albums")
         .success(function (data, status, headers, config) {
             $scope.albums = data;
-            $scope.album_selector = data[0];
-            $scope.album_changed($scope.album_selector);
+            for (var i = 0; i < $scope.albums.length; i++) {
+                $scope.album_changed($scope.albums[i]);
+            }
         })
         .error(function (data, status, headers, config) {
         });
