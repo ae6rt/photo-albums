@@ -8,10 +8,10 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.exif.GpsDirectory;
 import com.google.gson.Gson;
+import org.imgscalr.Scalr;
 import org.petrovic.photos.ErrorMessage;
 import org.petrovic.photos.PhotoMetadata;
 import org.petrovic.photos.Stream;
-import org.imgscalr.Scalr;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.Consumes;
@@ -44,6 +44,12 @@ public class AlbumsResource {
     private final File albumsDirectory = new File("albums");
 
     private final FilenameFilter fileFilter = new FilenameFilter() {
+
+        private boolean hasImageExtension(String fileName) {
+            String normalizedFileName = fileName.toLowerCase();
+            return normalizedFileName.endsWith("jpg") || normalizedFileName.endsWith("png") || normalizedFileName.endsWith("gif");
+        }
+
         private boolean isImageFile(String path) {
             return hasImageExtension(path) && !path.contains("-thumbnail");
         }
@@ -120,7 +126,8 @@ public class AlbumsResource {
         File albumDirectory = new File(albumsDirectory, albumNumber.toString());
         File imageFile;
         if (useThumbnail) {
-            String thumbnailImageFileName = String.format("%s-thumbnail", nameLessExtension(imageFileName));
+            String fileExtension = extension(imageFileName);
+            String thumbnailImageFileName = String.format("%s-thumbnail.%s", nameLessExtension(imageFileName), fileExtension);
             File thumbnailFile = new File(albumDirectory, thumbnailImageFileName);
             if (!thumbnailFile.exists()) {
                 createThumbnail(albumDirectory, imageFileName, thumbnailImageFileName);
@@ -130,6 +137,10 @@ public class AlbumsResource {
             imageFile = new File(albumDirectory, imageFileName);
         }
         return new Stream(imageFile);
+    }
+
+    private String extension(String imageFileName) {
+        return imageFileName.substring(imageFileName.lastIndexOf(".") + 1);
     }
 
     @GET
@@ -144,11 +155,6 @@ public class AlbumsResource {
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
     public void addImage() {
         throw new UnsupportedOperationException();
-    }
-
-    private boolean hasImageExtension(String fileName) {
-        String normalizedFileName = fileName.toLowerCase();
-        return normalizedFileName.endsWith("jpg") || normalizedFileName.endsWith("png") || normalizedFileName.endsWith("gif");
     }
 
     private void createThumbnail(File albumDirectory, String imageFileName, String thumbnailImageFileName) {
