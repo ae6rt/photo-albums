@@ -4,14 +4,14 @@
     <script src="js/ui-bootstrap-tpls-0.7.0.min.js"></script>
     <script src="app/controllers.js"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/app.css"/>
 </head>
 <body ng-controller="AlbumController">
-<div ng-repeat="a in albums">
-    <hr/>
-    Album {{a}}
+<div ng-repeat="album in albums" class="album">
+    <span>{{album}}</span>
     <ul class="inline">
-        <li ng-repeat="i in image_names_by_album[a]">
-            <img ng-click="open(a,i)" ng-src="/albums/{{a}}/{{i}}?thumbnail=true"/>
+        <li ng-repeat="i in image_names_by_album[album]">
+            <img ng-click="open(album,i)" ng-src="/albums/{{album}}/{{i}}?thumbnail=true"/>
         </li>
     </ul>
 </div>

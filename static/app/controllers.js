@@ -8,13 +8,13 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
         .success(function (data, status, headers, config) {
             $scope.albums = data;
             for (var i = 0; i < $scope.albums.length; i++) {
-                $scope.album_changed($scope.albums[i]);
+                $scope.album_fetcher($scope.albums[i]);
             }
         })
         .error(function (data, status, headers, config) {
         });
 
-    $scope.album_changed = function (album_number) {
+    $scope.album_fetcher = function (album_number) {
         $http.get("albums/" + album_number)
             .success(function (data, status, headers, config) {
                 $scope.image_names_by_album[album_number] = data;
@@ -34,9 +34,9 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
             });
 
         $scope.openPhotoDetail = function (photo_metadata) {
-            var modalInstance = $modal.open({
+            var photoDetailModal = $modal.open({
                 templateUrl: 'partials/photodetail.html',
-                controller: ModalInstanceCtrl,
+                controller: PhotoDetailModalController,
                 resolve: {
                     image_info: function () {
                         return {
@@ -52,13 +52,13 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
                     }
                 }
             });
-            modalInstance.result.then(function () {
+            photoDetailModal.result.then(function () {
             }, function () {
             });
         };
     };
 
-    var ModalInstanceCtrl = function ($scope, $modalInstance, image_info) {
+    var PhotoDetailModalController = function ($scope, $modalInstance, image_info) {
         $scope.image_info = image_info;
 
         $scope.ok = function () {
