@@ -26,14 +26,11 @@ import javax.ws.rs.core.StreamingOutput;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -60,11 +57,6 @@ public class AlbumsResource {
             return new File(file, s).isDirectory();
         }
     };
-
-    private boolean hasImageExtension(String fileName) {
-        String normalizedFileName = fileName.toLowerCase();
-        return normalizedFileName.endsWith("jpg") || normalizedFileName.endsWith("png") || normalizedFileName.endsWith("gif");
-    }
 
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -125,7 +117,7 @@ public class AlbumsResource {
         File albumDirectory = new File(albumsDirectory, albumNumber.toString());
         File imageFile;
         if (useThumbnail) {
-            String thumbnailImageFileName = String.format("%s-thumbnail", imageFileName.split(".JPG")[0]);
+            String thumbnailImageFileName = String.format("%s-thumbnail", nameLessExtension(imageFileName));
             File thumbnailFile = new File(albumDirectory, thumbnailImageFileName);
             if (!thumbnailFile.exists()) {
                 createThumbnail(albumDirectory, imageFileName, thumbnailImageFileName);
@@ -141,7 +133,7 @@ public class AlbumsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/metadata/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][gG]$}")
     public String metadata(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName) {
-        File t = new File(new File(albumsDirectory, albumNumber.toString()), imageFileName.split(".JPG")[0] + ".meta");
+        File t = new File(new File(albumsDirectory, albumNumber.toString()), nameLessExtension(imageFileName) + ".meta");
         return plainTextFromFile(t);
     }
 
@@ -149,6 +141,11 @@ public class AlbumsResource {
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
     public void addImage() {
         throw new UnsupportedOperationException();
+    }
+
+    private boolean hasImageExtension(String fileName) {
+        String normalizedFileName = fileName.toLowerCase();
+        return normalizedFileName.endsWith("jpg") || normalizedFileName.endsWith("png") || normalizedFileName.endsWith("gif");
     }
 
     private void createThumbnail(File albumDirectory, String imageFileName, String thumbnailImageFileName) {
@@ -167,8 +164,12 @@ public class AlbumsResource {
         }
     }
 
+    private String nameLessExtension(String s) {
+        return s.substring(0, s.lastIndexOf("."));
+    }
+
     private void writeExif(File imageFile) {
-        File metadataFile = new File(imageFile.getParentFile(), imageFile.getName().split(".JPG")[0] + ".meta");
+        File metadataFile = new File(imageFile.getParentFile(), nameLessExtension(imageFile.getName()) + ".meta");
         try {
             PhotoMetadata photoMetadata = null;
             Metadata metadata = ImageMetadataReader.readMetadata(imageFile);
@@ -198,36 +199,6 @@ public class AlbumsResource {
         }
     }
 
-    private class PhotoMetadata {
-        public String originalTime;
-        public String lat;
-        public String lng;
-
-        public PhotoMetadata() {
-        }
-
-        public PhotoMetadata(String originalTime, double lat, double lng) {
-            this.originalTime = originalTime;
-            this.lat = String.format("%f", lat);
-            this.lng = String.format("%f", lng);
-        }
-
-        public PhotoMetadata(String originalTime) {
-            this.originalTime = originalTime;
-            this.lat = "";
-            this.lng = "";
-        }
-
-        @Override
-        public String toString() {
-            return "PhotoMetadata{" +
-                    "originalTime='" + originalTime + '\'' +
-                    ", lat='" + lat + '\'' +
-                    ", lng='" + lng + '\'' +
-                    '}';
-        }
-    }
-
     private String plainTextFromFile(File file) {
         FileReader fileReader;
         try {
@@ -253,42 +224,4 @@ public class AlbumsResource {
         return Response.status(code).entity(new ErrorMessage(message)).header("Content-type", "application/json").build();
     }
 
-    public static class Stream implements StreamingOutput {
-
-        private final File file;
-        private final InputStream inputStream;
-
-        public Stream(File file) {
-            this.file = file;
-            try {
-                inputStream = new FileInputStream(file);
-            } catch (FileNotFoundException e) {
-                Response r = Response.status(404).entity(new ErrorMessage(String.format("Resource not found: %s", file))).header("Content-type", "application/json").build();
-                throw new WebApplicationException(r);
-            }
-        }
-
-        @Override
-        public void write(OutputStream output) throws IOException, WebApplicationException {
-            try {
-                byte[] buffer = new byte[1024 * 8];
-                int len;
-                while ((len = inputStream.read(buffer)) != -1) {
-                    output.write(buffer, 0, len);
-                    output.flush();
-                }
-            } catch (IOException e) {
-                Response r = Response.status(500).entity(new ErrorMessage(String.format("Error reading resource: %s", file))).header("Content-type", "application/json").build();
-                throw new WebApplicationException(r);
-            }
-        }
-    }
-
-    public static class ErrorMessage {
-        public final String error;
-
-        public ErrorMessage(String error) {
-            this.error = error;
-        }
-    }
 }
