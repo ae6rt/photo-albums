@@ -11,7 +11,7 @@
     <select ng-model="album_selector" ng-change="album_changed(album_selector)" ng-options="i for i in albums"></select>
 </div>
 <div>
-    <ul style="list-style: none;">
+    <ul class="inline">
         <li ng-repeat="i in image_names_by_album[album_selector]">
             <img ng-click="open(album_selector,i)" ng-src="/albums/{{album_selector}}/{{i}}?thumbnail=true"/>
         </li>
