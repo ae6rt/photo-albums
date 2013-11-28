@@ -6,6 +6,5 @@ body {
 div.album {
     border-style: ridge;
     border-width: 1px;
-    /*border-color: #3F3F3F;*/
     border-color: #2C2C2C;
 }

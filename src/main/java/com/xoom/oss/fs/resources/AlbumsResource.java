@@ -45,7 +45,7 @@ public class AlbumsResource {
 
     private final FilenameFilter fileFilter = new FilenameFilter() {
         private boolean isImageFile(String path) {
-            return path.endsWith("JPG") && !path.contains("-thumbnail");
+            return hasImageExtension(path) && !path.contains("-thumbnail");
         }
 
         @Override
@@ -60,6 +60,11 @@ public class AlbumsResource {
             return new File(file, s).isDirectory();
         }
     };
+
+    private boolean hasImageExtension(String fileName) {
+        String normalizedFileName = fileName.toLowerCase();
+        return normalizedFileName.endsWith("jpg") || normalizedFileName.endsWith("png") || normalizedFileName.endsWith("gif");
+    }
 
     @GET
     @Produces(MediaType.TEXT_HTML)
@@ -113,7 +118,7 @@ public class AlbumsResource {
     }
 
     @GET
-    @Path("/albums/{albumNumber: [0-9]+}/{imageFile: .*JPG$}")
+    @Path("/albums/{albumNumber: [0-9]+}/{imageFile: .*[jJ][pP][gG]$}")
     @Produces("image/jpeg")
     public StreamingOutput getImage(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName,
                                     @DefaultValue("false") @QueryParam("thumbnail") Boolean useThumbnail) {
@@ -134,7 +139,7 @@ public class AlbumsResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/metadata/{albumNumber: [0-9]+}/{imageFile: .*JPG$}")
+    @Path("/metadata/{albumNumber: [0-9]+}/{imageFile: .*[jJ][pP][gG]$}")
     public String metadata(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName) {
         File t = new File(new File(albumsDirectory, albumNumber.toString()), imageFileName.split(".JPG")[0] + ".meta");
         return plainTextFromFile(t);
