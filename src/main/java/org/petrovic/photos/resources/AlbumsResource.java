@@ -125,6 +125,13 @@ public class AlbumsResource {
         return Arrays.asList(list);
     }
 
+    @POST
+    @Consumes(MediaType.APPLICATION_OCTET_STREAM)
+    @Path("/albums/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]$}")
+    public void addImage() {
+        throw new UnsupportedOperationException();
+    }
+
     @GET
     @Path("/photo/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]$}")
     @Produces("image/jpeg")
@@ -162,12 +169,6 @@ public class AlbumsResource {
         return plainTextFromFile(t);
     }
 
-    @POST
-    @Consumes(MediaType.APPLICATION_OCTET_STREAM)
-    @Path("/albums/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]$}")
-    public void addImage() {
-        throw new UnsupportedOperationException();
-    }
 
     private void createThumbnail(File albumDirectory, String imageFileName, String thumbnailImageFileName) {
         File imageFile = new File(albumDirectory, imageFileName);
