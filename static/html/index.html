@@ -12,7 +12,7 @@
     <div class="albumlabel">{{album.name}}</div>
     <ul class="inline">
         <li ng-repeat="i in image_names_by_album[album.name]">
-            <img ng-click="open(album.name,i)" ng-src="/albums/{{album.name}}/{{i}}?thumbnail=true"/>
+            <img ng-click="open(album.name,i)" ng-src="/photo/{{album.name}}/{{i}}?thumbnail=true"/>
         </li>
     </ul>
 </div>

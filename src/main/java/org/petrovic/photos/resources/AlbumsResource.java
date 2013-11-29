@@ -126,7 +126,7 @@ public class AlbumsResource {
     }
 
     @GET
-    @Path("/albums/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]$}")
+    @Path("/photo/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]$}")
     @Produces("image/jpeg")
     public StreamingOutput getImage(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName,
                                     @DefaultValue("false") @QueryParam("thumbnail") Boolean useThumbnail) {
