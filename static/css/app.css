@@ -6,10 +6,10 @@ body {
 
 div.album {
     margin: 25px 10px;
-    border-style: ridge;
-    border-width: 1px;
-    border-radius: 2px;
-    border-color: #242424;
+    /*border-style: ridge;*/
+    /*border-width: 1px;*/
+    /*border-radius: 2px;*/
+    /*border-color: #242424;*/
 }
 
 .albumlabel {
