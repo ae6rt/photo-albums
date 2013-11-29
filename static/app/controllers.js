@@ -69,13 +69,27 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
 
     var PhotoDetailModalController = function ($scope, $modalInstance, image_info) {
         $scope.image_info = image_info;
+        $scope.show_edit = false;
+        $scope.caption = $scope.image_info.caption;
 
         $scope.ok = function () {
             $modalInstance.close();
         };
 
+        $scope.edit = function () {
+            $scope.show_edit = true;
+            console.log("edit clicked: " + $scope.image_info.album + ", " + $scope.image_info.image_name);
+        };
+
+        $scope.update_caption = function () {
+            $scope.show_edit = false;
+            console.log("update caption" + $scope.image_info.caption);
+        };
+
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
+
+
     };
 });
