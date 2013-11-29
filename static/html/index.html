@@ -8,11 +8,11 @@
     <title>Photo fun</title>
 </head>
 <body ng-controller="AlbumController">
-<div class="album" ng-repeat="album in albums">
-    <div class="albumlabel">{{album.name}}</div>
+<div class="album" ng-repeat="album_metadata in albums">
+    <div class="albumlabel">{{album_metadata.name}}</div>
     <ul class="inline">
-        <li ng-repeat="i in image_names_by_album[album.name]">
-            <img ng-click="open(album.name,i)" ng-src="/photo/{{album.name}}/{{i}}?thumbnail=true"/>
+        <li ng-repeat="i in image_names_by_album[album_metadata.name]">
+            <img ng-click="open(album_metadata.name,i)" ng-src="/photo/{{album_metadata.name}}/{{i}}?thumbnail=true"/>
         </li>
     </ul>
 </div>
