@@ -1,10 +1,17 @@
 body {
-    margin:25px 10px;
+    margin: 25px 10px;
+    margin: 25px 10px;
     background-color: #000000;
 }
 
 div.album {
+    margin: 25px 10px;
     border-style: ridge;
     border-width: 1px;
-    border-color: #2C2C2C;
+    border-radius: 2px;
+    border-color: #242424;
+}
+
+.albumlabel {
+    color: #737373;
 }

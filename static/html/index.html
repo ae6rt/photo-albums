@@ -8,7 +8,7 @@
 </head>
 <body ng-controller="AlbumController">
 <div ng-repeat="album in albums" class="album">
-    <span>{{album}}</span>
+    <span class="albumlabel">{{album}}</span>
     <ul class="inline">
         <li ng-repeat="i in image_names_by_album[album]">
             <img ng-click="open(album,i)" ng-src="/albums/{{album}}/{{i}}?thumbnail=true"/>
