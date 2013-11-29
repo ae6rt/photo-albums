@@ -25,7 +25,7 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
 
     $scope.open = function (album_number, image_name) {
 
-        $http.get("metadata/" + album_number + "/" + image_name)
+        $http.get("photo/metadata/" + album_number + "/" + image_name)
             .success(function (data, status, headers, config) {
                 $scope.openPhotoDetail(data);
             })
