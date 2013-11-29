@@ -43,10 +43,10 @@ import java.util.List;
 @Path("/")
 public class AlbumsResource {
 
-    private final File albumsDirectory = new File("albums");
-    private final File staticContent = new File("static");
-    private final File html = new File(staticContent, "html");
-    private final File partials = new File(html, "partials");
+    protected final File albumsDirectory = new File("albums");
+    protected final File staticContent = new File("static");
+    protected final File html = new File(staticContent, "html");
+    protected final File partials = new File(html, "partials");
 
     private final FilenameFilter fileFilter = new FilenameFilter() {
 
@@ -130,8 +130,8 @@ public class AlbumsResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
-    @Path("/albums/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]$}")
-    public void addImage() {
+    @Path("/photo/{albumNumber: [0-9]+}")
+    public void addImage(@PathParam("albumNumber") Integer albumNumber, byte[] imageBytes) {
         throw new UnsupportedOperationException();
     }
 
