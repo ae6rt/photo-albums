@@ -44,6 +44,9 @@ import java.util.List;
 public class AlbumsResource {
 
     private final File albumsDirectory = new File("albums");
+    private final File staticContent = new File("static");
+    private final File html = new File(staticContent, "html");
+    private final File partials = new File(html, "partials");
 
     private final FilenameFilter fileFilter = new FilenameFilter() {
 
@@ -72,35 +75,35 @@ public class AlbumsResource {
     @GET
     @Produces(MediaType.TEXT_HTML)
     public String index() throws IOException {
-        return plainTextFromFile(new File("static/html", "index.html"));
+        return plainTextFromFile(new File(html, "index.html"));
     }
 
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/partials/{file: .*html$}")
     public String html(@PathParam("file") String path) {
-        return plainTextFromFile(new File("static/html/partials", path));
+        return plainTextFromFile(new File(partials, path));
     }
 
     @GET
     @Produces("application/javascript")
     @Path("/{file: .*js(.map){0,1}$}")
     public String javascripts(@PathParam("file") String path) {
-        return plainTextFromFile(new File("static", path));
+        return plainTextFromFile(new File(staticContent, path));
     }
 
     @GET
     @Produces("text/css")
     @Path("/{file: .*css$}")
     public String css(@PathParam("file") String path) {
-        return plainTextFromFile(new File("static", path));
+        return plainTextFromFile(new File(staticContent, path));
     }
 
     @GET
     @Produces("image/png")
     @Path("/{file: .*png$}")
     public StreamingOutput png(@PathParam("file") String path) {
-        return new Stream(new File("static", path));
+        return new Stream(new File(staticContent, path));
     }
 
     @GET
