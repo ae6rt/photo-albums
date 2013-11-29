@@ -83,7 +83,7 @@ public class AlbumsResource {
 
     @GET
     @Produces("application/javascript")
-    @Path("/{file: .*js$}")
+    @Path("/{file: .*js(.map){0,1}$}")
     public String javascripts(@PathParam("file") String path) {
         return plainTextFromFile(new File("static", path));
     }
@@ -120,7 +120,7 @@ public class AlbumsResource {
     }
 
     @GET
-    @Path("/albums/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][gG]$}")
+    @Path("/albums/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]$}")
     @Produces("image/jpeg")
     public StreamingOutput getImage(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName,
                                     @DefaultValue("false") @QueryParam("thumbnail") Boolean useThumbnail) {
@@ -142,7 +142,7 @@ public class AlbumsResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/metadata/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][gG]$}")
+    @Path("/metadata/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]$}")
     public String photoMetadata(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName) {
         File t = new File(new File(albumsDirectory, albumNumber.toString()), Strings.nameLessExtension(imageFileName) + ".meta");
         return plainTextFromFile(t);
