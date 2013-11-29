@@ -143,8 +143,16 @@ public class AlbumsResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/metadata/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][gG]$}")
-    public String metadata(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName) {
+    public String photoMetadata(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName) {
         File t = new File(new File(albumsDirectory, albumNumber.toString()), Strings.nameLessExtension(imageFileName) + ".meta");
+        return plainTextFromFile(t);
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/metadata/{albumNumber: [0-9]+}")
+    public String albumMetadata(@PathParam("albumNumber") Integer albumNumber) {
+        File t = new File(new File(albumsDirectory, albumNumber.toString()), "meta.json");
         return plainTextFromFile(t);
     }
 
