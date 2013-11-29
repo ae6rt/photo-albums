@@ -9,7 +9,10 @@
 </head>
 <body ng-controller="AlbumController">
 <div class="album" ng-repeat="album_metadata in albums">
-    <button class="btn btn-link" ng-click="album_metadata_edit(album_metadata)">{{album_metadata.name}}</button>
+    <div>
+        <span class="albumlabel">{{album_metadata.name}}</span>
+        <button class="btn btn-link" ng-click="album_metadata_edit(album_metadata)">Edit</button>
+    </div>
     <ul class="inline">
         <li ng-repeat="i in image_names_by_album[album_metadata.name]">
             <img ng-click="open(album_metadata.name,i)" ng-src="/photo/{{album_metadata.name}}/{{i}}?thumbnail=true"/>
