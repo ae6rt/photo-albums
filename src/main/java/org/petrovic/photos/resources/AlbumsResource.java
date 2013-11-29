@@ -121,8 +121,8 @@ public class AlbumsResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/albums/{albumNumber: [0-9]+}")
-    public List<String> listAlbum(@PathParam("albumNumber") Integer albumNumber) {
+    @Path("/albums/{albumNumber: [0-9]+}/photos")
+    public List<String> listAlbumPhotos(@PathParam("albumNumber") Integer albumNumber) {
         File albumDirectory = new File(albumsDirectory, albumNumber.toString());
         String[] list = albumDirectory.list(fileFilter);
         return Arrays.asList(list);

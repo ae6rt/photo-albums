@@ -15,7 +15,7 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
         });
 
     $scope.album_fetcher = function (album_metadata) {
-        $http.get("albums/" + album_metadata.name)
+        $http.get("albums/" + album_metadata.name + "/photos")
             .success(function (data, status, headers, config) {
                 $scope.image_names_by_album[album_metadata.name] = data;
             })
