@@ -1,17 +1,20 @@
 body {
-    margin: 25px 10px;
-    margin: 25px 10px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+    margin-right: 10px;
+    margin-left: 150px;
     background-color: #000000;
 }
 
 div.album {
-    margin: 25px 10px;
-    /*border-style: ridge;*/
-    /*border-width: 1px;*/
-    /*border-radius: 2px;*/
-    /*border-color: #242424;*/
+    border-style: ridge;
+    border-width: 1px;
+    border-radius: 2px;
+    border-color: #242424;
+    padding: 25px 10px;
 }
 
 .albumlabel {
     color: #737373;
+    padding-bottom: 15px;
 }
