@@ -14,19 +14,10 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
         .error(function (data, status, headers, config) {
         });
 
-    /*  Doesn't work yet.
-     $http.jsonp("http://maps.googleapis.com/maps/api/geocode/json?latlng=43.274333,11.986833&sensor=false&callback=JSON_CALLBACK")
-     .success(function (data, status, headers, config) {
-     console.log("hello");
-     })
-     .error(function (data, status, headers, config) {
-     });
-     */
-
-    $scope.album_fetcher = function (album_number) {
-        $http.get("albums/" + album_number)
+    $scope.album_fetcher = function (album_metadata) {
+        $http.get("albums/" + album_metadata.name)
             .success(function (data, status, headers, config) {
-                $scope.image_names_by_album[album_number] = data;
+                $scope.image_names_by_album[album_metadata.name] = data;
             })
             .error(function (data, status, headers, config) {
             });

@@ -35,6 +35,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -105,9 +106,14 @@ public class AlbumsResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/albums")
-    public List<String> listAlbums() {
+    public List<AlbumMetadata> listAlbums() {
         String[] list = albumsDirectory.list(directoryFilter);
-        return Arrays.asList(list);
+        List<AlbumMetadata> albumMetadatas = new ArrayList<AlbumMetadata>();
+        for (String albumName : list) {
+            AlbumMetadata albumMetadata = new AlbumMetadata(albumName, "desc " + albumName);
+            albumMetadatas.add(albumMetadata);
+        }
+        return albumMetadatas;
     }
 
     @GET
@@ -158,6 +164,7 @@ public class AlbumsResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_OCTET_STREAM)
+    @Path("/albums/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]$}")
     public void addImage() {
         throw new UnsupportedOperationException();
     }

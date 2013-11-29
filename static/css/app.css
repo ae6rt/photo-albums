@@ -7,11 +7,8 @@ body {
 }
 
 div.album {
-    border-style: ridge;
-    border-width: 1px;
-    border-radius: 2px;
-    border-color: #242424;
-    padding: 25px 10px;
+    padding-top: 25px;
+    padding-bottom: 25px;
 }
 
 .albumlabel {
