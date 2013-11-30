@@ -68,6 +68,7 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
                     }
                 }
             });
+
             photoDetailModal.result.then(function () {
             }, function () {
             });
@@ -98,6 +99,8 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
         };
     };
 
+    /* Glue callback for use by album metadata update modal.  Seems like there should be a better way to
+     * get this done.  */
     $scope.change_album_description = function (name, description) {
         for (i = 0; i < $scope.albums.length; ++i) {
             if ($scope.albums[i].name == name) {
