@@ -118,8 +118,6 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
                     return {
                         name: album_metadata.name,
                         description: album_metadata.description,
-
-                        /* deprecated:  let the album meta service update albums[] to avoid this callback */
                         update_callback: $scope.change_album_description
                     };
                 }
