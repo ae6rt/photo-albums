@@ -136,8 +136,8 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
         $scope.ok = function (description) {
             $modalInstance.close();
             /* this callback is clunky.  can we not update albums here? */
-            $scope.album_meta.update_callback($scope.album_meta.name, description);
             AlbumMetaUpdateService.update({name: $scope.album_meta.name, description: description});
+            $scope.album_meta.update_callback($scope.album_meta.name, description);
         };
 
         $scope.cancel = function () {
