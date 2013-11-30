@@ -82,7 +82,8 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
         };
     };
 
-    $scope.album_metadata_edit = function ($scope, $modalInstance, album_metadata) {
+    $scope.album_metadata_edit = function (album_metadata) {
+        console.log("meta: " + JSON.stringify(album_metadata));
         var albumDescriptionModal = $modal.open({
             templateUrl: 'partials/albumdetail.html',
             controller: AlbumDetailModalController,
@@ -101,9 +102,9 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
 
     var AlbumDetailModalController = function ($scope, $modalInstance, album_metadata) {
         $scope.album_metadata = album_metadata;
-        $scope.description = $scope.album_metadata.name;
 
         $scope.ok = function () {
+            console.log("ok handler: " + album_metadata.name);
             $modalInstance.close();
         };
 
