@@ -1,6 +1,7 @@
 var albumApp = angular.module('albumApp', ['ui.bootstrap']);
 
-/* Define an album metadata update service. */
+/* Define an album metadata update service.  It's a bit of overkill for what it does,
+ * but I wanted to learn how to do this.  */
 albumApp.factory('AlbumMetaUpdateService', ['$http', function ($http) {
     return {
         update: function (album_metadata) {
