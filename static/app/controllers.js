@@ -82,7 +82,7 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
         };
     };
 
-    $scope.foo = function (name, description) {
+    $scope.change_album_description = function (name, description) {
         for (i = 0; i < $scope.albums.length; ++i) {
             if ($scope.albums[i].name == name) {
                 $scope.albums[i] = {name: name, description: description};
@@ -99,7 +99,7 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
                     return {
                         name: album_metadata.name,
                         description: album_metadata.description,
-                        f: $scope.foo
+                        update_callback: $scope.change_album_description
                     };
                 }
             }
@@ -116,7 +116,7 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
 
         $scope.ok = function (description) {
             $modalInstance.close();
-            $scope.album_meta.f($scope.album_meta.name, description);
+            $scope.album_meta.update_callback($scope.album_meta.name, description);
         };
 
         $scope.cancel = function () {
