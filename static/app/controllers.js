@@ -23,10 +23,6 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
             });
     };
 
-    $scope.album_metadata_edit = function (album_metadata) {
-        console.log("edit album name: " + album_metadata.name);
-    };
-
     $scope.open = function (album_number, image_name) {
 
         $http.get("photo/metadata/" + album_number + "/" + image_name)
@@ -85,4 +81,36 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
             $modalInstance.dismiss('cancel');
         };
     };
+
+    $scope.album_metadata_edit = function ($scope, $modalInstance, album_metadata) {
+        var albumDescriptionModal = $modal.open({
+            templateUrl: 'partials/albumdetail.html',
+            controller: AlbumDetailModalController,
+            resolve: {
+                album_metadata: function () {
+                    return {
+                        album_metadata: album_metadata
+                    };
+                }
+            }
+        });
+        albumDescriptionModal.result.then(function () {
+        }, function () {
+        });
+    };
+
+    var AlbumDetailModalController = function ($scope, $modalInstance, album_metadata) {
+        $scope.album_metadata = album_metadata;
+        $scope.description = $scope.album_metadata.name;
+
+        $scope.ok = function () {
+            $modalInstance.close();
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    };
+
+
 });
