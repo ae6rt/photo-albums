@@ -88,8 +88,8 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
         for (i = 0; i < $scope.albums.length; ++i) {
             console.log("old meta: " + $scope.albums[i].description);
             if ($scope.albums[i].name == name) {
-                console.log("   found it: " + $scope.albums[i].description);
-                $scope.albums[i] = album_metadata;
+                console.log("   found it: old=" + $scope.albums[i].description + ", new=" + description);
+                $scope.albums[i] = {name: name, description: description};
             }
         }
     };
@@ -104,6 +104,7 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
                 album_meta: function () {
                     return {
                         name: album_metadata.name,
+                        description: album_metadata.description,
                         f: $scope.foo
                     };
                 }
@@ -117,12 +118,15 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
 
     var AlbumDetailModalController = function ($scope, $modalInstance, album_meta) {
         $scope.album_meta = album_meta;
+        $scope.description = album_meta.description;
+        console.log("modal controller entry.  meta.name=" + $scope.album_meta.name);
+        console.log("modal controller entry.  meta.description=" + $scope.description);
 
         $scope.ok = function () {
             $modalInstance.close();
             console.log("modal closed.  meta.name=" + $scope.album_meta.name);
             console.log("modal closed.  meta.description=" + $scope.description);
-            $scope.album_meta.f({name: $scope.album_meta.name, description: $scope.description});
+            $scope.album_meta.f($scope.album_meta.name, $scope.description);
         };
 
         $scope.cancel = function () {
