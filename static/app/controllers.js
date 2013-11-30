@@ -1,17 +1,18 @@
 var albumApp = angular.module('albumApp', ['ui.bootstrap']);
 
 /* Define an album metadata update service. */
-albumApp.factory('AlbumMetaUpdateService', ['$http', function ($http, album_metadata) {
-    return function (album_metadata) {
-        console.log("in service with metadata.name, metadata.description: " + album_metadata.name + ", " + album_metadata.description);
-        $http.put("albums/" + album_metadata.name, album_metadata)
-            .success(function (data, status, headers, config) {
-                console.log("put worked");
-            })
-            .error(function (data, status, headers, config) {
-                console.log("put failed");
-            });
-    }
+albumApp.factory('AlbumMetaUpdateService', ['$http', function ($http) {
+    return {
+        update: function (album_metadata) {
+            console.log("in service with metadata.name, metadata.description: " + album_metadata.name + ", " + album_metadata.description);
+            $http.put("albums/" + album_metadata.name, album_metadata)
+                .success(function (data, status, headers, config) {
+                    console.log("put worked: status=" + status);
+                })
+                .error(function (data, status, headers, config) {
+                    console.log("put failed: status=" + status);
+                });
+        }}
 }]);
 
 albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
@@ -132,8 +133,9 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
 
         $scope.ok = function (description) {
             $modalInstance.close();
+            /* this callback is clunky.  can we not update albums here? */
             $scope.album_meta.update_callback($scope.album_meta.name, description);
-            AlbumMetaUpdateService({name: $scope.album_meta.name, description: description});
+            AlbumMetaUpdateService.update({name: $scope.album_meta.name, description: description});
         };
 
         $scope.cancel = function () {
