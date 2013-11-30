@@ -62,7 +62,7 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
                         return {
                             album: album_number,
                             image_name: image_name,
-                            caption: "",
+                            caption: photo_metadata.caption,
                             exif: {
                                 lat: photo_metadata.lat,
                                 long: photo_metadata.lng,
@@ -81,7 +81,6 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
 
     var PhotoDetailModalController = function ($scope, $modalInstance, image_info) {
         $scope.image_info = image_info;
-        $scope.show_edit = false;
         $scope.caption = $scope.image_info.caption;
 
         $scope.ok = function () {
@@ -93,9 +92,8 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
             console.log("edit clicked: " + $scope.image_info.album + ", " + $scope.image_info.image_name);
         };
 
-        $scope.update_caption = function () {
-            $scope.show_edit = false;
-            console.log("update caption" + $scope.image_info.caption);
+        $scope.update_caption = function (new_caption) {
+            console.log("updated caption: " + new_caption);
         };
 
         $scope.cancel = function () {

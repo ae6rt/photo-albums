@@ -249,11 +249,11 @@ public class AlbumsResource {
                     GeoLocation geoLocation = gpsDirectory.getGeoLocation();
                     double latitude = geoLocation.getLatitude();
                     double longitude = geoLocation.getLongitude();
-                    photoMetadata = new PhotoMetadata(date.toString(), latitude, longitude);
+                    photoMetadata = new PhotoMetadata(Strings.nameLessExtension(imageFile.getName()), date.toString(), latitude, longitude);
                 }
             }
             if (photoMetadata == null) {
-                photoMetadata = new PhotoMetadata(date.toString());
+                photoMetadata = new PhotoMetadata(Strings.nameLessExtension(imageFile.getName()), date.toString());
             }
             FileWriter fileWriter = new FileWriter(metadataFile);
             fileWriter.write(new Gson().toJson(photoMetadata));
