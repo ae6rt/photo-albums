@@ -19,6 +19,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -133,6 +134,13 @@ public class AlbumsResource {
     @Path("/photo/{albumNumber: [0-9]+}")
     public void addImage(@PathParam("albumNumber") Integer albumNumber, byte[] imageBytes) {
         throw new UnsupportedOperationException();
+    }
+
+    @PUT
+    @Path("/albums/{albumNumber: [0-9]+}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void testMe(@PathParam("albumNumber") Integer albumNumber, AlbumMetadata albumMetadata) {
+        System.out.println(albumMetadata);
     }
 
     @GET

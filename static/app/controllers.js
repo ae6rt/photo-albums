@@ -1,10 +1,18 @@
 var albumApp = angular.module('albumApp', ['ui.bootstrap']);
 
-/*
+/* Define an album metadata update service. */
 albumApp.factory('AlbumMetaUpdateService', ['$http', function ($http, album_metadata) {
-    console.log("in service with metadata.name, metadata.description: " + album_metadata.name + ", " + album_metadata.description);
+    return function (album_metadata) {
+        console.log("in service with metadata.name, metadata.description: " + album_metadata.name + ", " + album_metadata.description);
+        $http.put("albums/" + album_metadata.name, album_metadata)
+            .success(function (data, status, headers, config) {
+                console.log("put worked");
+            })
+            .error(function (data, status, headers, config) {
+                console.log("put failed");
+            });
+    }
 }]);
-*/
 
 albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
 
@@ -105,6 +113,8 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
                     return {
                         name: album_metadata.name,
                         description: album_metadata.description,
+
+                        /* deprecated:  let the album meta service update albums[] to avoid this callback */
                         update_callback: $scope.change_album_description
                     };
                 }
@@ -116,13 +126,14 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
         });
     };
 
-    var AlbumDetailModalController = function ($scope, $modalInstance, album_meta) {
+    var AlbumDetailModalController = function ($scope, $modalInstance, AlbumMetaUpdateService, album_meta) {
         $scope.album_meta = album_meta;
         $scope.description = album_meta.description;
 
         $scope.ok = function (description) {
             $modalInstance.close();
             $scope.album_meta.update_callback($scope.album_meta.name, description);
+            AlbumMetaUpdateService({name: $scope.album_meta.name, description: description});
         };
 
         $scope.cancel = function () {
