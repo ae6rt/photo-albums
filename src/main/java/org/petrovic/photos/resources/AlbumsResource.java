@@ -111,10 +111,10 @@ public class AlbumsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/albums")
     public List<AlbumMetadata> listAlbums() {
-        String[] list = albumsDirectory.list(directoryFilter);
+        String[] albumDirectoryNames = albumsDirectory.list(directoryFilter);
         List<AlbumMetadata> albumMetadatas = new ArrayList<AlbumMetadata>();
-        for (String albumName : list) {
-            AlbumMetadata albumMetadata = new AlbumMetadata(albumName, "desc " + albumName);
+        for (String albumName : albumDirectoryNames) {
+            AlbumMetadata albumMetadata = loadAlbumMetaData(albumName);
             albumMetadatas.add(albumMetadata);
         }
         return albumMetadatas;
@@ -140,7 +140,14 @@ public class AlbumsResource {
     @Path("/albums/{albumNumber: [0-9]+}")
     @Consumes(MediaType.APPLICATION_JSON)
     public void testMe(@PathParam("albumNumber") Integer albumNumber, AlbumMetadata albumMetadata) {
-        System.out.println(albumMetadata);
+        File metadataFile = new File(new File(albumsDirectory, albumNumber.toString()), "meta.json");
+        try {
+            FileWriter writer = new FileWriter(metadataFile);
+            writer.write(new Gson().toJson(albumMetadata));
+            writer.close();
+        } catch (IOException e) {
+            throw new WebApplicationException(response(500, String.format("Error writing resource: %s", metadataFile)));
+        }
     }
 
     @GET
@@ -180,7 +187,6 @@ public class AlbumsResource {
         return plainTextFromFile(t);
     }
 
-
     private void createThumbnail(File albumDirectory, String imageFileName, String thumbnailImageFileName) {
         File imageFile = new File(albumDirectory, imageFileName);
         if (!imageFile.exists()) {
@@ -194,6 +200,37 @@ public class AlbumsResource {
             writeExif(imageFile);
         } catch (IOException e) {
             throw new WebApplicationException(e, response(500, String.format("Error reading resource: %s", imageFile)));
+        }
+    }
+
+
+    private AlbumMetadata loadAlbumMetaData(String albumName) {
+        File metadataFile = new File(new File(albumsDirectory, albumName), "meta.json");
+        if (metadataFile.exists()) {
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(metadataFile));
+                String line;
+                StringBuilder sb = new StringBuilder();
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+                reader.close();
+                return new Gson().fromJson(sb.toString(), AlbumMetadata.class);
+            } catch (FileNotFoundException e) {
+                throw new WebApplicationException(response(404, String.format("Resource not found: %s", metadataFile)));
+            } catch (IOException e) {
+                throw new WebApplicationException(response(500, String.format("Error reading resource: %s", metadataFile)));
+            }
+        } else {
+            AlbumMetadata albumMetadata = new AlbumMetadata(albumName, "desc " + albumName);
+            try {
+                FileWriter writer = new FileWriter(metadataFile);
+                writer.write(new Gson().toJson(albumMetadata));
+                writer.close();
+            } catch (IOException e) {
+                throw new WebApplicationException(response(500, String.format("Error writing resource: %s", metadataFile)));
+            }
+            return albumMetadata;
         }
     }
 
