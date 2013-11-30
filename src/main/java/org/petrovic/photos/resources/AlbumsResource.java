@@ -10,6 +10,7 @@ import com.drew.metadata.exif.GpsDirectory;
 import com.google.gson.Gson;
 import org.imgscalr.Scalr;
 import org.petrovic.photos.ErrorMessage;
+import org.petrovic.photos.Json;
 import org.petrovic.photos.PhotoMetadata;
 import org.petrovic.photos.Stream;
 import org.petrovic.photos.Strings;
@@ -176,7 +177,16 @@ public class AlbumsResource {
     @Path("/photo/metadata/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]$}")
     public String photoMetadata(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName) {
         File t = new File(new File(albumsDirectory, albumNumber.toString()), Strings.nameLessExtension(imageFileName) + ".meta");
+
         return plainTextFromFile(t);
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Path("/photo/metadata/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]$}")
+    public void updatePhotoMetadata(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName) {
+        File photoMetadataFile = new File(new File(albumsDirectory, albumNumber.toString()), Strings.nameLessExtension(imageFileName) + ".meta");
+        System.out.printf("photo caption update to file %s\n", photoMetadataFile);
     }
 
     @GET
@@ -203,19 +213,11 @@ public class AlbumsResource {
         }
     }
 
-
     private AlbumMetadata loadAlbumMetaData(String albumName) {
         File metadataFile = new File(new File(albumsDirectory, albumName), "meta.json");
         if (metadataFile.exists()) {
             try {
-                BufferedReader reader = new BufferedReader(new FileReader(metadataFile));
-                String line;
-                StringBuilder sb = new StringBuilder();
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-                reader.close();
-                return new Gson().fromJson(sb.toString(), AlbumMetadata.class);
+                return Json.deserializeFromFile(metadataFile, AlbumMetadata.class);
             } catch (FileNotFoundException e) {
                 throw new WebApplicationException(response(404, String.format("Resource not found: %s", metadataFile)));
             } catch (IOException e) {
@@ -224,9 +226,7 @@ public class AlbumsResource {
         } else {
             AlbumMetadata albumMetadata = new AlbumMetadata(albumName, "desc " + albumName);
             try {
-                FileWriter writer = new FileWriter(metadataFile);
-                writer.write(new Gson().toJson(albumMetadata));
-                writer.close();
+                Json.serializeToFile(albumMetadata, metadataFile);
             } catch (IOException e) {
                 throw new WebApplicationException(response(500, String.format("Error writing resource: %s", metadataFile)));
             }

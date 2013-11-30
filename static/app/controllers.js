@@ -79,7 +79,7 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
         };
     };
 
-    var PhotoDetailModalController = function ($scope, $modalInstance, image_info) {
+    var PhotoDetailModalController = function ($scope, $modalInstance, $http, image_info) {
         $scope.image_info = image_info;
         $scope.caption = $scope.image_info.caption;
 
@@ -87,13 +87,15 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
             $modalInstance.close();
         };
 
-        $scope.edit = function () {
-            $scope.show_edit = true;
-            console.log("edit clicked: " + $scope.image_info.album + ", " + $scope.image_info.image_name);
-        };
-
-        $scope.update_caption = function (new_caption) {
-            console.log("updated caption: " + new_caption);
+        $scope.update_caption = function (new_caption, album_number, image_name) {
+            console.log("updating photo caption: " + new_caption);
+            $http.put("photo/metadata/" + album_number + "/" + image_name, {caption: new_caption})
+                .success(function (data, status, headers, config) {
+                    console.log("put photo caption put succeeded")
+                })
+                .error(function (data, status, headers, config) {
+                    $log.info("Error putting metadata for " + image_name);
+                });
         };
 
         $scope.cancel = function () {
