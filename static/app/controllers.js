@@ -13,6 +13,10 @@ albumApp.factory('AlbumMetaUpdateService', ['$http', function ($http) {
                 .error(function (data, status, headers, config) {
                     console.log("put failed: status=" + status);
                 });
+
+        },
+        some_other_function: function () {
+            console.log("some other function");
         }}
 }]);
 
