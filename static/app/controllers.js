@@ -83,20 +83,14 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
     };
 
     $scope.foo = function (name, description) {
-        console.log("new meta.name: " + name);
-        console.log("new meta.description: " + description);
         for (i = 0; i < $scope.albums.length; ++i) {
-            console.log("old meta: " + $scope.albums[i].description);
             if ($scope.albums[i].name == name) {
-                console.log("   found it: old=" + $scope.albums[i].description + ", new=" + description);
                 $scope.albums[i] = {name: name, description: description};
             }
         }
     };
 
     $scope.album_metadata_edit = function (album_metadata) {
-        console.log("editing meta.name=" + album_metadata.name);
-        console.log("editing meta.description=" + album_metadata.description);
         var albumDescriptionModal = $modal.open({
             templateUrl: 'partials/albumdetail.html',
             controller: AlbumDetailModalController,
@@ -119,20 +113,14 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
     var AlbumDetailModalController = function ($scope, $modalInstance, album_meta) {
         $scope.album_meta = album_meta;
         $scope.description = album_meta.description;
-        console.log("modal controller entry.  meta.name=" + $scope.album_meta.name);
-        console.log("modal controller entry.  meta.description=" + $scope.description);
 
-        $scope.ok = function () {
+        $scope.ok = function (description) {
             $modalInstance.close();
-            console.log("modal closed.  meta.name=" + $scope.album_meta.name);
-            console.log("modal closed.  meta.description=" + $scope.description);
-            $scope.album_meta.f($scope.album_meta.name, $scope.description);
+            $scope.album_meta.f($scope.album_meta.name, description);
         };
 
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
         };
     };
-
-
 });
