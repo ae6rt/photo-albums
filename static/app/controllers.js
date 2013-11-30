@@ -1,8 +1,14 @@
 var albumApp = angular.module('albumApp', ['ui.bootstrap']);
 
+/*
+albumApp.factory('AlbumMetaUpdateService', ['$http', function ($http, album_metadata) {
+    console.log("in service with metadata.name, metadata.description: " + album_metadata.name + ", " + album_metadata.description);
+}]);
+*/
+
 albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
 
-    $scope.image_names_by_album = new Array();
+    $scope.image_names_by_album = [];
 
     $http.get("albums")
         .success(function (data, status, headers, config) {
