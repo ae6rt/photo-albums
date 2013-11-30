@@ -102,7 +102,7 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
     /* Glue callback for use by album metadata update modal.  Seems like there should be a better way to
      * get this done.  But no matter how or where this update gets done, the whole thumbnail gallery for this
      * album is updated when the description is updated - which is inefficient.  Can we decouple updating
-     * the thumbnail update from the description update? */
+     * the thumbnails from the description? */
     $scope.change_album_description = function (name, description) {
         for (i = 0; i < $scope.albums.length; ++i) {
             if ($scope.albums[i].name == name) {
