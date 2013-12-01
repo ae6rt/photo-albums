@@ -5,10 +5,8 @@ var albumApp = angular.module('albumApp', ['ui.bootstrap']);
 albumApp.factory('AlbumMetaUpdateService', ['$http', function ($http) {
     return {
         update: function (album_metadata) {
-            console.log("in service with metadata.name, metadata.description: " + album_metadata.name + ", " + album_metadata.description);
             $http.put("albums/" + album_metadata.name, album_metadata)
                 .success(function (data, status, headers, config) {
-                    console.log("put worked: status=" + status);
                 })
                 .error(function (data, status, headers, config) {
                     console.log("put failed: status=" + status);
@@ -16,7 +14,6 @@ albumApp.factory('AlbumMetaUpdateService', ['$http', function ($http) {
 
         },
         some_other_function: function () {
-            console.log("some other function");
         }}
 }]);
 
@@ -88,10 +85,8 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
         };
 
         $scope.update_caption = function (new_caption, album_number, image_name) {
-            console.log("updating photo caption: " + new_caption);
             $http.put("photo/metadata/" + album_number + "/" + image_name, {caption: new_caption})
                 .success(function (data, status, headers, config) {
-                    console.log("put photo caption put succeeded")
                 })
                 .error(function (data, status, headers, config) {
                     $log.info("Error putting metadata for " + image_name);

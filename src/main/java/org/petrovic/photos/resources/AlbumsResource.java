@@ -7,7 +7,6 @@ import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.exif.GpsDirectory;
-import com.google.gson.Gson;
 import org.imgscalr.Scalr;
 import org.petrovic.photos.Json;
 import org.petrovic.photos.PhotoMetadata;
@@ -29,8 +28,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.StreamingOutput;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -80,29 +77,29 @@ public class AlbumsResource {
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/partials/{file: .*html$}")
-    public String html(@PathParam("file") String path) {
-        return Strings.readStringFromFile(new File(partials, path));
+    public String html(@PathParam("file") String partialViewFile) {
+        return Strings.readStringFromFile(new File(partials, partialViewFile));
     }
 
     @GET
     @Produces("application/javascript")
     @Path("/{file: .*js(.map){0,1}$}")
-    public String javascripts(@PathParam("file") String path) {
-        return Strings.readStringFromFile(new File(staticContent, path));
+    public String javascripts(@PathParam("file") String javaScriptFileName) {
+        return Strings.readStringFromFile(new File(staticContent, javaScriptFileName));
     }
 
     @GET
     @Produces("text/css")
     @Path("/{file: .*css$}")
-    public String css(@PathParam("file") String path) {
-        return Strings.readStringFromFile(new File(staticContent, path));
+    public String css(@PathParam("file") String cssFilePath) {
+        return Strings.readStringFromFile(new File(staticContent, cssFilePath));
     }
 
     @GET
     @Produces("image/png")
     @Path("/{file: .*png$}")
-    public StreamingOutput png(@PathParam("file") String path) {
-        return new Stream(new File(staticContent, path));
+    public StreamingOutput png(@PathParam("file") String pngFilePath) {
+        return new Stream(new File(staticContent, pngFilePath));
     }
 
     @GET
@@ -137,15 +134,9 @@ public class AlbumsResource {
     @PUT
     @Path("/albums/{albumNumber: [0-9]+}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void testMe(@PathParam("albumNumber") Integer albumNumber, AlbumMetadata albumMetadata) {
+    public void updateAlbumMetadata(@PathParam("albumNumber") Integer albumNumber, AlbumMetadata albumMetadata) {
         File metadataFile = new File(new File(albumsDirectory, albumNumber.toString()), metaFileSuffix);
-        try {
-            FileWriter writer = new FileWriter(metadataFile);
-            writer.write(new Gson().toJson(albumMetadata));
-            writer.close();
-        } catch (IOException e) {
-            throw new WebApplicationException(Web.response(500, String.format("Error writing resource: %s", metadataFile)));
-        }
+        Json.serializeToFile(albumMetadata, metadataFile);
     }
 
     @GET
@@ -211,20 +202,10 @@ public class AlbumsResource {
     protected AlbumMetadata loadAlbumMetaData(String albumName) {
         File metadataFile = new File(new File(albumsDirectory, albumName), "meta.json");
         if (metadataFile.exists()) {
-            try {
-                return Json.deserializeFromFile(metadataFile, AlbumMetadata.class);
-            } catch (FileNotFoundException e) {
-                throw new WebApplicationException(Web.response(404, String.format("Resource not found: %s", metadataFile)));
-            } catch (IOException e) {
-                throw new WebApplicationException(Web.response(500, String.format("Error reading resource: %s", metadataFile)));
-            }
+            return Json.deserializeFromFile(metadataFile, AlbumMetadata.class);
         } else {
             AlbumMetadata albumMetadata = new AlbumMetadata(albumName, "desc " + albumName);
-            try {
-                Json.serializeToFile(albumMetadata, metadataFile);
-            } catch (IOException e) {
-                throw new WebApplicationException(Web.response(500, String.format("Error writing resource: %s", metadataFile)));
-            }
+            Json.serializeToFile(albumMetadata, metadataFile);
             return albumMetadata;
         }
     }
