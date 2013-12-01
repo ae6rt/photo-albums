@@ -1,7 +1,11 @@
 package org.petrovic.photos;
 
+import org.petrovic.photos.resources.Web;
+
+import javax.ws.rs.WebApplicationException;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,14 +19,27 @@ public class Strings {
         return s.substring(0, s.lastIndexOf("."));
     }
 
-    public static String readStringFromFile(File f) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(f));
+    public static String readStringFromFile(File f) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(f));
+        } catch (FileNotFoundException e) {
+            throw new WebApplicationException(Web.response(404, String.format("Resource not found: %s", f)));
+        }
         String line;
         StringBuilder sb = new StringBuilder();
-        while ((line = reader.readLine()) != null) {
-            sb.append(line);
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+        } catch (IOException e) {
+            throw new WebApplicationException(Web.response(500, String.format("Error reading resource: %s", f)));
         }
-        reader.close();
+        try {
+            reader.close();
+        } catch (IOException e) {
+            // intentionally empty
+        }
         return sb.toString();
     }
 

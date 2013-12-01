@@ -9,7 +9,6 @@ import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.exif.GpsDirectory;
 import com.google.gson.Gson;
 import org.imgscalr.Scalr;
-import org.petrovic.photos.ErrorMessage;
 import org.petrovic.photos.Json;
 import org.petrovic.photos.PhotoMetadata;
 import org.petrovic.photos.Stream;
@@ -27,13 +26,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -78,28 +74,28 @@ public class AlbumsResource {
     @GET
     @Produces(MediaType.TEXT_HTML)
     public String index() throws IOException {
-        return plainTextFromFile(new File(html, "index.html"));
+        return Strings.readStringFromFile(new File(html, "index.html"));
     }
 
     @GET
     @Produces(MediaType.TEXT_HTML)
     @Path("/partials/{file: .*html$}")
     public String html(@PathParam("file") String path) {
-        return plainTextFromFile(new File(partials, path));
+        return Strings.readStringFromFile(new File(partials, path));
     }
 
     @GET
     @Produces("application/javascript")
     @Path("/{file: .*js(.map){0,1}$}")
     public String javascripts(@PathParam("file") String path) {
-        return plainTextFromFile(new File(staticContent, path));
+        return Strings.readStringFromFile(new File(staticContent, path));
     }
 
     @GET
     @Produces("text/css")
     @Path("/{file: .*css$}")
     public String css(@PathParam("file") String path) {
-        return plainTextFromFile(new File(staticContent, path));
+        return Strings.readStringFromFile(new File(staticContent, path));
     }
 
     @GET
@@ -148,7 +144,7 @@ public class AlbumsResource {
             writer.write(new Gson().toJson(albumMetadata));
             writer.close();
         } catch (IOException e) {
-            throw new WebApplicationException(response(500, String.format("Error writing resource: %s", metadataFile)));
+            throw new WebApplicationException(Web.response(500, String.format("Error writing resource: %s", metadataFile)));
         }
     }
 
@@ -177,9 +173,8 @@ public class AlbumsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/photo/metadata/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]$}")
     public String photoMetadata(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName) {
-        File t = new File(new File(albumsDirectory, albumNumber.toString()), String.format("%s.%s", Strings.nameLessExtension(imageFileName), metaFileSuffix));
-
-        return plainTextFromFile(t);
+        File metadataFile = new File(new File(albumsDirectory, albumNumber.toString()), String.format("%s.%s", Strings.nameLessExtension(imageFileName), metaFileSuffix));
+        return Strings.readStringFromFile(metadataFile);
     }
 
     @PUT
@@ -187,7 +182,6 @@ public class AlbumsResource {
     @Path("/photo/metadata/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]$}")
     public void updatePhotoMetadata(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName) {
         File photoMetadataFile = new File(new File(albumsDirectory, albumNumber.toString()), String.format("%s.%s", Strings.nameLessExtension(imageFileName), metaFileSuffix));
-        System.out.printf("photo caption update to file %s\n", photoMetadataFile);
     }
 
     @GET
@@ -195,13 +189,13 @@ public class AlbumsResource {
     @Path("/metadata/{albumNumber: [0-9]+}")
     public String albumMetadata(@PathParam("albumNumber") Integer albumNumber) {
         File t = new File(new File(albumsDirectory, albumNumber.toString()), metaFileSuffix);
-        return plainTextFromFile(t);
+        return Strings.readStringFromFile(t);
     }
 
-    private void createThumbnail(File albumDirectory, String imageFileName, String thumbnailImageFileName) {
+    protected void createThumbnail(File albumDirectory, String imageFileName, String thumbnailImageFileName) {
         File imageFile = new File(albumDirectory, imageFileName);
         if (!imageFile.exists()) {
-            throw new WebApplicationException(response(404, String.format("Resource not found: %s", imageFile)));
+            throw new WebApplicationException(Web.response(404, String.format("Resource not found: %s", imageFile)));
         }
         try {
             BufferedImage img = ImageIO.read(imageFile);
@@ -210,32 +204,32 @@ public class AlbumsResource {
             ImageIO.write(thumbImg, "jpg", thumbNailImageFile);
             writeExif(imageFile);
         } catch (IOException e) {
-            throw new WebApplicationException(e, response(500, String.format("Error reading resource: %s", imageFile)));
+            throw new WebApplicationException(e, Web.response(500, String.format("Error reading resource: %s", imageFile)));
         }
     }
 
-    private AlbumMetadata loadAlbumMetaData(String albumName) {
+    protected AlbumMetadata loadAlbumMetaData(String albumName) {
         File metadataFile = new File(new File(albumsDirectory, albumName), "meta.json");
         if (metadataFile.exists()) {
             try {
                 return Json.deserializeFromFile(metadataFile, AlbumMetadata.class);
             } catch (FileNotFoundException e) {
-                throw new WebApplicationException(response(404, String.format("Resource not found: %s", metadataFile)));
+                throw new WebApplicationException(Web.response(404, String.format("Resource not found: %s", metadataFile)));
             } catch (IOException e) {
-                throw new WebApplicationException(response(500, String.format("Error reading resource: %s", metadataFile)));
+                throw new WebApplicationException(Web.response(500, String.format("Error reading resource: %s", metadataFile)));
             }
         } else {
             AlbumMetadata albumMetadata = new AlbumMetadata(albumName, "desc " + albumName);
             try {
                 Json.serializeToFile(albumMetadata, metadataFile);
             } catch (IOException e) {
-                throw new WebApplicationException(response(500, String.format("Error writing resource: %s", metadataFile)));
+                throw new WebApplicationException(Web.response(500, String.format("Error writing resource: %s", metadataFile)));
             }
             return albumMetadata;
         }
     }
 
-    private void writeExif(File imageFile) {
+    protected void writeExif(File imageFile) {
         File metadataFile = new File(imageFile.getParentFile(), Strings.nameLessExtension(imageFile.getName()) + ".meta.json");
         try {
             PhotoMetadata photoMetadata = null;
@@ -260,35 +254,9 @@ public class AlbumsResource {
             fileWriter.write(new Gson().toJson(photoMetadata));
             fileWriter.close();
         } catch (ImageProcessingException e) {
-            throw new WebApplicationException(response(404, String.format("Resource not found: %s", imageFile)));
+            throw new WebApplicationException(Web.response(404, String.format("Resource not found: %s", imageFile)));
         } catch (IOException e) {
-            throw new WebApplicationException(e, response(500, String.format("Error reading resource: %s", imageFile)));
+            throw new WebApplicationException(e, Web.response(500, String.format("Error reading resource: %s", imageFile)));
         }
     }
-
-    private String plainTextFromFile(File file) {
-        FileReader fileReader;
-        try {
-            fileReader = new FileReader(file);
-        } catch (FileNotFoundException e) {
-            throw new WebApplicationException(response(404, String.format("Resource not found: %s", file)));
-        }
-        BufferedReader br = new BufferedReader(fileReader);
-        String s;
-        StringBuilder sb = new StringBuilder();
-        try {
-            while ((s = br.readLine()) != null) {
-                sb.append(s);
-            }
-            fileReader.close();
-            return sb.toString();
-        } catch (IOException e) {
-            throw new WebApplicationException(response(500, String.format("Error reading resource: %s", file)));
-        }
-    }
-
-    private Response response(int code, String message) {
-        return Response.status(code).entity(new ErrorMessage(message)).header("Content-type", "application/json").build();
-    }
-
 }
