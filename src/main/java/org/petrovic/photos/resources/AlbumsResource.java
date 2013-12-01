@@ -49,6 +49,7 @@ public class AlbumsResource {
     protected final File staticContent = new File("static");
     protected final File html = new File(staticContent, "html");
     protected final File partials = new File(html, "partials");
+    protected final String metaFileSuffix = "meta.json";
 
     private final FilenameFilter fileFilter = new FilenameFilter() {
 
@@ -141,7 +142,7 @@ public class AlbumsResource {
     @Path("/albums/{albumNumber: [0-9]+}")
     @Consumes(MediaType.APPLICATION_JSON)
     public void testMe(@PathParam("albumNumber") Integer albumNumber, AlbumMetadata albumMetadata) {
-        File metadataFile = new File(new File(albumsDirectory, albumNumber.toString()), "meta.json");
+        File metadataFile = new File(new File(albumsDirectory, albumNumber.toString()), metaFileSuffix);
         try {
             FileWriter writer = new FileWriter(metadataFile);
             writer.write(new Gson().toJson(albumMetadata));
@@ -176,7 +177,7 @@ public class AlbumsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/photo/metadata/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]$}")
     public String photoMetadata(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName) {
-        File t = new File(new File(albumsDirectory, albumNumber.toString()), Strings.nameLessExtension(imageFileName) + ".meta");
+        File t = new File(new File(albumsDirectory, albumNumber.toString()), String.format("%s.%s", Strings.nameLessExtension(imageFileName), metaFileSuffix));
 
         return plainTextFromFile(t);
     }
@@ -185,7 +186,7 @@ public class AlbumsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/photo/metadata/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]$}")
     public void updatePhotoMetadata(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName) {
-        File photoMetadataFile = new File(new File(albumsDirectory, albumNumber.toString()), Strings.nameLessExtension(imageFileName) + ".meta");
+        File photoMetadataFile = new File(new File(albumsDirectory, albumNumber.toString()), String.format("%s.%s", Strings.nameLessExtension(imageFileName), metaFileSuffix));
         System.out.printf("photo caption update to file %s\n", photoMetadataFile);
     }
 
@@ -193,7 +194,7 @@ public class AlbumsResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/metadata/{albumNumber: [0-9]+}")
     public String albumMetadata(@PathParam("albumNumber") Integer albumNumber) {
-        File t = new File(new File(albumsDirectory, albumNumber.toString()), "meta.json");
+        File t = new File(new File(albumsDirectory, albumNumber.toString()), metaFileSuffix);
         return plainTextFromFile(t);
     }
 
@@ -235,7 +236,7 @@ public class AlbumsResource {
     }
 
     private void writeExif(File imageFile) {
-        File metadataFile = new File(imageFile.getParentFile(), Strings.nameLessExtension(imageFile.getName()) + ".meta");
+        File metadataFile = new File(imageFile.getParentFile(), Strings.nameLessExtension(imageFile.getName()) + ".meta.json");
         try {
             PhotoMetadata photoMetadata = null;
             Metadata metadata = ImageMetadataReader.readMetadata(imageFile);
