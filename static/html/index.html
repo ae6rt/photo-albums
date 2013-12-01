@@ -8,16 +8,23 @@
     <title>Photo fun</title>
 </head>
 <body ng-controller="AlbumController">
-<div class="album" ng-repeat="album_metadata in albums">
-    <div>
-        <span class="albumlabel">{{album_metadata.description}}</span>
-        <button class="btn btn-link" ng-click="album_metadata_edit(album_metadata)">Edit</button>
+<div id="container">
+    <div id="header">
     </div>
-    <ul class="inline">
-        <li class="image-thumbnail" ng-repeat="i in image_names_by_album[album_metadata.name]">
-            <img ng-click="open(album_metadata.name,i)" ng-src="/photo/{{album_metadata.name}}/{{i}}?thumbnail=true"/>
-        </li>
-    </ul>
+    <div id="albums" class="album" ng-repeat="album_metadata in albums">
+        <div>
+            <span class="albumlabel">{{album_metadata.description}}</span>
+            <button class="btn btn-link" ng-click="album_metadata_edit(album_metadata)">Edit</button>
+        </div>
+        <ul class="inline">
+            <li class="image-thumbnail" ng-repeat="i in image_names_by_album[album_metadata.name]">
+                <img ng-click="open(album_metadata.name,i)"
+                     ng-src="/photo/{{album_metadata.name}}/{{i}}?thumbnail=true"/>
+            </li>
+        </ul>
+    </div>
+    <div id="footer">
+    </div>
 </div>
 </body>
 </html>

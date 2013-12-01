@@ -5,12 +5,11 @@
     <img ng-src="/photo/{{image_info.album}}/{{image_info.image_name}}"/>
 </div>
 <div class="modal-footer">
-    <button class="btn btn-primary btn-small" ng-click="ok()">OK</button>
-
     <div class="photo-date" ng-show="image_info.exif.original_date.length != 0">{{image_info.exif.original_date}}
         <a href="http://maps.google.com/maps?z=12&t=m&q=loc:{{image_info.exif.lat}}+{{image_info.exif.long}}"
            ng-show="image_info.exif.lat.length != 0">
             ({{image_info.exif.lat}}, {{image_info.exif.long}})
         </a>
     </div>
+    <button class="btn btn-primary btn-small" ng-click="ok()">OK</button>
 </div>

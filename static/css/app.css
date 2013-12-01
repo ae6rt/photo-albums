@@ -27,4 +27,5 @@ div.album {
 
 .photo-date {
     font-weight: lighter;
+    float: left;
 }
