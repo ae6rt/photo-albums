@@ -20,6 +20,24 @@ albumApp.factory('AlbumMetaUpdateService', ['$http', function ($http) {
         }}
 }]);
 
+albumApp.directive('ngEnter', function () {
+    return function (scope, elm, attrs) {
+        elm.bind('keypress', function (e) {
+            if (e.charCode === 13) scope.$apply(attrs.ngEnter);
+        });
+    };
+});
+
+albumApp.directive('inlineEdit', function () {
+    return {
+        restrict: 'E',
+        templateUrl: 'partials/componentTpl.html',
+        scope: {
+            model: '='
+        }
+    };
+});
+
 albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
 
     $scope.image_names_by_album = [];
