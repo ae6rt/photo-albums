@@ -45,14 +45,4 @@ public class AlbumsResource extends AbstractResource {
         File metadataFile = new File(new File(albumsDirectory, albumNumber.toString()), metaFileSuffix);
         Json.serializeToFile(albumMetadata, metadataFile);
     }
-
-/*
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/metadata/{albumNumber: [0-9]+}")
-    public String albumMetadata(@PathParam("albumNumber") Integer albumNumber) {
-        File t = new File(new File(albumsDirectory, albumNumber.toString()), metaFileSuffix);
-        return Strings.readStringFromFile(t);
-    }
-*/
 }
