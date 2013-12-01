@@ -1,3 +1,7 @@
+
+/*
+Use Angular Bootstrap for nice widgets: http://angular-ui.github.io/bootstrap/
+ */
 var albumApp = angular.module('albumApp', ['ui.bootstrap']);
 
 /* Define an album metadata update service.  It's a bit of overkill for what it does,
