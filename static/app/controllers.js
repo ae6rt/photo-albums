@@ -1,6 +1,5 @@
-
 /*
-Use Angular Bootstrap for nice widgets: http://angular-ui.github.io/bootstrap/
+ Use Angular Bootstrap for nice widgets: http://angular-ui.github.io/bootstrap/
  */
 var albumApp = angular.module('albumApp', ['ui.bootstrap']);
 
@@ -46,7 +45,7 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
 
     $scope.open = function (album_number, image_name) {
 
-        $http.get("photo/metadata/" + album_number + "/" + image_name)
+        $http.get("photo/" + album_number + "/" + image_name + "/metadata")
             .success(function (data, status, headers, config) {
                 $scope.openPhotoDetail(data);
             })
@@ -89,7 +88,7 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
         };
 
         $scope.update_caption = function (new_caption, album_number, image_name) {
-            $http.put("photo/metadata/" + album_number + "/" + image_name, {caption: new_caption})
+            $http.put("photo/" + album_number + "/" + image_name + "/metadata", {caption: new_caption})
                 .success(function (data, status, headers, config) {
                 })
                 .error(function (data, status, headers, config) {

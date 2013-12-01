@@ -49,7 +49,7 @@ public class PhotoResource extends AbstractResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("/metadata/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]$}")
+    @Path("/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]}/metadata")
     public String photoMetadata(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName) {
         File metadataFile = new File(new File(albumsDirectory, albumNumber.toString()), String.format("%s.%s", Strings.nameLessExtension(imageFileName), metaFileSuffix));
         return Strings.readStringFromFile(metadataFile);
@@ -57,7 +57,7 @@ public class PhotoResource extends AbstractResource {
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    @Path("/metadata/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]$}")
+    @Path("/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]}/metadata")
     public void updatePhotoMetadata(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName) {
         File photoMetadataFile = new File(new File(albumsDirectory, albumNumber.toString()), String.format("%s.%s", Strings.nameLessExtension(imageFileName), metaFileSuffix));
     }
