@@ -39,7 +39,7 @@ albumApp.directive('inlineEdit', function () {
             model: '='
         },
         controller: function ($scope) {
-            update_caption = function ($scope, newcapt) {
+            update_caption = function (newcapt) {
                 console.log("ctrl caption: " + model + ", newcapt: " + newcapt);
             }
         }

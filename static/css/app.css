@@ -19,3 +19,11 @@ div.album {
     padding-top: 5px;
     padding-bottom: 5px;
 }
+
+.image-caption {
+    font-weight: bold;
+}
+
+.photo-date {
+    font-weight: lighter;
+}

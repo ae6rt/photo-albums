@@ -1,22 +1,12 @@
 <div class="modal-header">
-    <div ng-show="image_info.exif.original_date.length != 0">{{image_info.exif.original_date}}
+    <inline-edit model="image_info.caption"></inline-edit>
+
+    <div class="photo-date" ng-show="image_info.exif.original_date.length != 0">{{image_info.exif.original_date}}
         <a href="http://maps.google.com/maps?z=12&t=m&q=loc:{{image_info.exif.lat}}+{{image_info.exif.long}}"
            ng-show="image_info.exif.lat.length != 0">
             ({{image_info.exif.lat}}, {{image_info.exif.long}})
         </a>
     </div>
-
-<!--
-    <div class="image-caption">
-        {{image_info.caption}}
-        <button class="btn btn-link"
-                ng-click="update_caption(image_info.caption, image_info.album_number, image_info.image_name)">
-            Edit
-        </button>
-    </div>
--->
-
-    <inline-edit model="image_info.caption"></inline-edit>
 
 </div>
 <div class="modal-body">
