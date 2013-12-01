@@ -250,9 +250,7 @@ public class AlbumsResource {
             if (photoMetadata == null) {
                 photoMetadata = new PhotoMetadata(Strings.nameLessExtension(imageFile.getName()), date.toString());
             }
-            FileWriter fileWriter = new FileWriter(metadataFile);
-            fileWriter.write(new Gson().toJson(photoMetadata));
-            fileWriter.close();
+            Json.serializeToFile(photoMetadata, metadataFile);
         } catch (ImageProcessingException e) {
             throw new WebApplicationException(Web.response(404, String.format("Resource not found: %s", imageFile)));
         } catch (IOException e) {
