@@ -1,2 +1,2 @@
 <span ng-hide="editMode" ng-click="editMode=true;value=model">{{model}}</span>
-<input type="text" ng-model="model" ng-show="editMode" ng-enter="editMode=false"/>
+<input type="text" ng-model="model" ng-show="editMode" ng-enter="editMode=false;update_caption(model)"/>

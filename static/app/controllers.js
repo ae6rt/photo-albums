@@ -23,7 +23,10 @@ albumApp.factory('AlbumMetaUpdateService', ['$http', function ($http) {
 albumApp.directive('ngEnter', function () {
     return function (scope, elm, attrs) {
         elm.bind('keypress', function (e) {
-            if (e.charCode === 13) scope.$apply(attrs.ngEnter);
+            if (e.charCode === 13) {
+                scope.$apply(attrs.ngEnter);
+                console.log("entered");
+            }
         });
     };
 });
@@ -34,6 +37,11 @@ albumApp.directive('inlineEdit', function () {
         templateUrl: 'partials/componentTpl.html',
         scope: {
             model: '='
+        },
+        controller: function ($scope) {
+            update_caption = function ($scope, newcapt) {
+                console.log("ctrl caption: " + model + ", newcapt: " + newcapt);
+            }
         }
     };
 });
