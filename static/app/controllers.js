@@ -31,9 +31,12 @@ albumApp.directive('inlineEdit', function () {
         },
         controller: ['$scope', '$http', function ($scope, $http) {
             $scope.update_caption = function () {
-                console.log("caption: " + $scope.model);
-                console.log("album: " + $scope.album);
-                console.log("image: " + $scope.imageName);
+                $http.put("photo/" + $scope.album + "/" + $scope.imageName + "/metadata", {caption: $scope.model})
+                    .success(function (data, status, headers, config) {
+                    })
+                    .error(function (data, status, headers, config) {
+                        console.log("photo caption update failed with status: " + status);
+                    });
             }
         }]
     };
