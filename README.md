@@ -4,7 +4,7 @@ myself new AngularJS techniques.
 Sample photos are here:  https://github.com/ae6rt/sample-photos.
 Clone it and copy albums/ into this project's root directory.
 
-The backend is Java/JAX-RS.  Start it using
+The backend is Java/JAX-RS.  Open a Terminal, and start it using
 
    ./gradlew build run [-Daccess.logging]
 
