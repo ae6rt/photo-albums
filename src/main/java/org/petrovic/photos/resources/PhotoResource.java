@@ -1,5 +1,7 @@
 package org.petrovic.photos.resources;
 
+import org.petrovic.photos.Json;
+import org.petrovic.photos.PhotoMetadata;
 import org.petrovic.photos.Stream;
 import org.petrovic.photos.Strings;
 
@@ -58,8 +60,10 @@ public class PhotoResource extends AbstractResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/{albumNumber: [0-9]+}/{imageFile: .*\\.[jJ][pP][eE]{0,1}[gG]}/metadata")
-    public void updatePhotoMetadata(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName) {
+    public void updatePhotoMetadata(@PathParam("albumNumber") Integer albumNumber, @PathParam("imageFile") String imageFileName, PhotoMetadata photoMetadata) {
         File photoMetadataFile = new File(new File(albumsDirectory, albumNumber.toString()), String.format("%s.%s", Strings.nameLessExtension(imageFileName), metaFileSuffix));
+        PhotoMetadata update = Json.deserializeFromFile(photoMetadataFile, PhotoMetadata.class);
+        update.caption = photoMetadata.caption;
+        Json.serializeToFile(update, photoMetadataFile);
     }
-
 }

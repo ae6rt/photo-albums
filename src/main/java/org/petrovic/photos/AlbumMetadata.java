@@ -1,4 +1,4 @@
-package org.petrovic.photos.resources;
+package org.petrovic.photos;
 
 public class AlbumMetadata {
     public String name;

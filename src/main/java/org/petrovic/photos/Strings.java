@@ -1,7 +1,5 @@
 package org.petrovic.photos;
 
-import org.petrovic.photos.resources.Web;
-
 import javax.ws.rs.WebApplicationException;
 import java.io.BufferedReader;
 import java.io.File;

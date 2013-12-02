@@ -8,9 +8,11 @@ import com.drew.metadata.Metadata;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
 import com.drew.metadata.exif.GpsDirectory;
 import org.imgscalr.Scalr;
+import org.petrovic.photos.AlbumMetadata;
 import org.petrovic.photos.Json;
 import org.petrovic.photos.PhotoMetadata;
 import org.petrovic.photos.Strings;
+import org.petrovic.photos.Web;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.WebApplicationException;

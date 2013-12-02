@@ -25,11 +25,15 @@ albumApp.directive('inlineEdit', function () {
         restrict: 'E',
         templateUrl: 'partials/componentTpl.html',
         scope: {
-            model: '='
+            model: '=',
+            album: "=",
+            imageName: "="
         },
         controller: ['$scope', '$http', function ($scope, $http) {
-            $scope.update_caption = function (newcapt) {
+            $scope.update_caption = function (newcapt, albumNumber, imageName) {
                 console.log("iic: " + newcapt);
+                console.log("album: " + albumNumber);
+                console.log("image: " + imageName);
             }
         }]
     };

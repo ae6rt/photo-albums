@@ -1,4 +1,4 @@
-package org.petrovic.photos.resources;
+package org.petrovic.photos;
 
 import org.petrovic.photos.ErrorMessage;
 

@@ -1,5 +1,6 @@
 package org.petrovic.photos.resources;
 
+import org.petrovic.photos.AlbumMetadata;
 import org.petrovic.photos.Json;
 
 import javax.ws.rs.Consumes;

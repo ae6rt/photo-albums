@@ -1,7 +1,6 @@
 package org.petrovic.photos;
 
 import com.google.gson.Gson;
-import org.petrovic.photos.resources.Web;
 
 import javax.ws.rs.WebApplicationException;
 import java.io.File;
