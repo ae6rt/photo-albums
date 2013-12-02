@@ -101,4 +101,8 @@ albumApp.controller('AlbumController', function ($scope, $http, $modal, $log) {
         };
     };
 
+    $scope.new_album = function () {
+        console.log("new album clicked");
+    }
+
 });
