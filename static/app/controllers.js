@@ -30,10 +30,10 @@ albumApp.directive('inlineEdit', function () {
             imageName: "="
         },
         controller: ['$scope', '$http', function ($scope, $http) {
-            $scope.update_caption = function (newcapt, albumNumber, imageName) {
-                console.log("iic: " + newcapt);
-                console.log("album: " + albumNumber);
-                console.log("image: " + imageName);
+            $scope.update_caption = function () {
+                console.log("caption: " + $scope.model);
+                console.log("album: " + $scope.album);
+                console.log("image: " + $scope.imageName);
             }
         }]
     };
