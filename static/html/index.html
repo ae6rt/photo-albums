@@ -14,7 +14,7 @@
     </div>
     <div id="albums" class="album" ng-repeat="album_metadata in albums">
         <div>
-            <span class="albumlabel">{{album_metadata.description}}</span>
+            <span class="album-title">{{album_metadata.description}}</span>
             <button class="btn btn-link" ng-click="album_metadata_edit(album_metadata)">Edit</button>
         </div>
         <ul class="inline">

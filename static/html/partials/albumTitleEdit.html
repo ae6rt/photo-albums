@@ -1,0 +1,6 @@
+<span class="album-title" ng-hide="editMode"
+      ng-click="editMode=true">{{model}}</span>
+<input type="text" ng-model="model" ng-show="editMode"/>
+<button class="btn btn-small" ng-show="editMode" ng-click="editMode=false;update_album_title()">
+    Ok
+</button>
