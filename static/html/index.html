@@ -14,8 +14,8 @@
     </div>
     <div id="albums" class="album" ng-repeat="album_metadata in albums">
         <div>
-            <span class="album-title">{{album_metadata.description}}</span>
-            <button class="btn btn-link" ng-click="album_metadata_edit(album_metadata)">Edit</button>
+            <inline-album-title-edit model="album_metadata.description"
+                                     album="album_metadata.name"></inline-album-title-edit>
         </div>
         <ul class="inline">
             <li class="image-thumbnail" ng-repeat="i in image_names_by_album[album_metadata.name]">
