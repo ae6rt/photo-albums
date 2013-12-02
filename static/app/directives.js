@@ -1,4 +1,4 @@
-albumApp.directive('inlineEdit', function () {
+albumApp.directive('inlineCaptionEdit', function () {
     return {
         restrict: 'E',
         templateUrl: 'partials/componentTpl.html',
