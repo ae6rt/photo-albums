@@ -1,15 +1,15 @@
 albumApp.directive('inlineCaptionEdit', function () {
     return {
         restrict: 'E',
-        templateUrl: 'partials/componentTpl.html',
+        templateUrl: 'partials/photoCaption.html',
         scope: {
-            model: '=',
+            caption: '=',
             album: "=",
             imageName: "="
         },
         controller: ['$scope', '$http', function ($scope, $http) {
             $scope.update_caption = function () {
-                $http.put("photo/" + $scope.album + "/" + $scope.imageName + "/metadata", {caption: $scope.model})
+                $http.put("photo/" + $scope.album + "/" + $scope.imageName + "/metadata", {caption: $scope.caption})
                     .success(function (data, status, headers, config) {
                     })
                     .error(function (data, status, headers, config) {
