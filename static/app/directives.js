@@ -25,12 +25,12 @@ albumApp.directive('inlineAlbumTitleEdit', function () {
         restrict: 'E',
         templateUrl: 'partials/albumTitleEdit.html',
         scope: {
-            model: '=',
+            description: '=',
             album: "="
         },
         controller: ['$scope', 'AlbumMetaUpdateService', function ($scope, AlbumMetaUpdateService) {
             $scope.update_album_title = function () {
-                AlbumMetaUpdateService.update({name: $scope.album, description: $scope.model});
+                AlbumMetaUpdateService.update({name: $scope.album, description: $scope.description});
             }
         }]
     };
