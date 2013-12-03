@@ -47,6 +47,8 @@ Then point your browser to http://localhost:8080.
 ##### What it still needs:
 
     * Unit tests using whatever the Angular community uses
+    * Add new album
+    * Add photo to existing album
     * Keyboard handling for <enter> detection during album title and photo caption editing
 
 Some of the Angular code is clunky and naive. I'm still learning.
