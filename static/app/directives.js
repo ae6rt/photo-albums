@@ -1,7 +1,7 @@
 albumApp.directive('inlineCaptionEdit', function () {
     return {
         restrict: 'E',
-        templateUrl: 'partials/photoCaption.html',
+        templateUrl: 'partials/photocaption.html',
         scope: {
             caption: '=',
             album: "=",
@@ -23,7 +23,7 @@ albumApp.directive('inlineCaptionEdit', function () {
 albumApp.directive('inlineAlbumTitleEdit', function () {
     return {
         restrict: 'E',
-        templateUrl: 'partials/albumTitle.html',
+        templateUrl: 'partials/albumtitle.html',
         scope: {
             description: '=',
             album: "="
