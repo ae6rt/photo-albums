@@ -23,7 +23,7 @@ albumApp.directive('inlineCaptionEdit', function () {
 albumApp.directive('inlineAlbumTitleEdit', function () {
     return {
         restrict: 'E',
-        templateUrl: 'partials/albumTitleEdit.html',
+        templateUrl: 'partials/albumTitle.html',
         scope: {
             description: '=',
             album: "="
