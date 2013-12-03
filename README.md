@@ -1,7 +1,8 @@
-An AngularJS photo album manager.  I use this application to teach
-myself new AngularJS techniques.
+### An AngularJS photo album manager.
 
-Sample photos are here:  https://github.com/ae6rt/sample-photos.
+I use this application to teach myself new AngularJS techniques.
+
+[Sample photos are here](https://github.com/ae6rt/sample-photos).
 Clone it and copy albums/ into this project's root directory so that you
 get something that looks like this
 
@@ -19,9 +20,9 @@ get something that looks like this
     albums/3/847D32FF-6D44-4781-AC58-1B4985DE0338.JPG
     albums/3/8E988C87-B118-4E6B-854D-953EC8CF5C84.JPG
 
-The backend is Java/JAX-RS.  Open a Terminal, and start it using
+The backend is Java/JAX-RS hosted within Jetty-based [FeatherCon](https://github.com/xoom/feathercon).  Open a Terminal, and start the backend with
 
-   ./gradlew build run [-Daccess.logging]
+    ./gradlew build run [-Daccess.logging]
 
 Then point your browser to http://localhost:8080.
 
