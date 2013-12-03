@@ -4,9 +4,9 @@ I use this application to teach myself new AngularJS techniques.
 
 [Sample photos are here](https://github.com/ae6rt/sample-photos).
 Clone it and copy albums/ into this project's root directory so that you
-get something that looks like this
+get something that looks like this in this project's top level:
 
-    sample-photos> find albums
+    $ find albums
     albums
     albums/1
     albums/1/6D282BA9-A64C-4B02-9476-EAA2E1B0AC72.JPG
