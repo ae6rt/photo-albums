@@ -60,6 +60,7 @@ public class AbstractResource {
         try {
             BufferedImage img = ImageIO.read(imageFile);
             BufferedImage thumbImg = Scalr.resize(img, Scalr.Method.QUALITY, Scalr.Mode.AUTOMATIC, 100, 100, Scalr.OP_ANTIALIAS);
+            thumbImg = Scalr.crop(thumbImg, 75, 75);
             File thumbNailImageFile = new File(albumDirectory, thumbnailImageFileName);
             ImageIO.write(thumbImg, "jpg", thumbNailImageFile);
             writeExif(imageFile);
