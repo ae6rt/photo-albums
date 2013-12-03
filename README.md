@@ -36,12 +36,17 @@ The backend is Java/JAX-RS hosted within Jetty-based [FeatherCon](https://github
 
 Then point your browser to http://localhost:8080.
 
-Features:
+##### Features:
 
     * Click on a thumbnail for a larger modal view of a photo (Angular UI modals)
     * Album name and photo caption inline editing (Angular directives), with backend persistence
     * An Angular service to update album descriptions
     * Backend thumbnail generation using [ImgScalr](https://github.com/thebuzzmedia/imgscalr)
     * Basic Exif data extraction to acquire date/time photo was taken, along with GPS if it's available.
+
+##### What it still needs:
+
+    * Unit tests using whatever the Angular community uses
+    * Keyboard handling for <enter> detection during album title and photo caption editing
 
 Some of the Angular code is clunky and naive. I'm still learning.
