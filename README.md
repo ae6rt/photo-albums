@@ -1,4 +1,4 @@
-### An AngularJS photo album manager.
+### An AngularJS photo album manager
 
 I use this application to teach myself new AngularJS techniques.
 
