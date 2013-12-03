@@ -34,3 +34,5 @@ Features:
     * Backend thumbnail generation using [ImgScalr](https://github.com/thebuzzmedia/imgscalr)
     * Basic Exif data extraction to acquire date/time photo was taken, along with GPS if it's available.
 
+Some of the Angular code is clunky and naive. I'm still learning.
+
