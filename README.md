@@ -29,5 +29,8 @@ Then point your browser to http://localhost:8080.
 Features:
 
     * Click on a thumbnail for a larger modal view of a photo (Angular UI modals)
-    * Album name and photo caption inline editing (Angular directives)
+    * Album name and photo caption inline editing (Angular directives), with backend persistence
     * An Angular service to update album descriptions
+    * Backend thumbnail generation using [ImgScalr](https://github.com/thebuzzmedia/imgscalr)
+    * Basic Exif data extraction to acquire date/time photo was taken, along with GPS if it's available.
+
